@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Georgia","Times New Roman",serif; font-size: 10.5px; line-height: 1.65; color: #222; max-width: 780px; margin: 0 auto; padding: 32px 36px; }
+  .personal { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; }
+  .personal .photo { width: 90px; height: 120px; border: 1px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #999; background: #f5f5f5; }
+  .personal .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .personal .info { flex: 1; }
+  .personal .info .name { font-family: "Arial","Helvetica",sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+  .personal .info .row { font-size: 10.5px; color: #444; margin-bottom: 3px; }
+  .personal .info .row .label { font-weight: 700; min-width: 55px; display: inline-block; }
+  .section { margin-bottom: 14px; page-break-inside: avoid; }
+  .section-title { font-family: "Arial","Helvetica",sans-serif; font-size: 12px; font-weight: 700; border-bottom: 1.5px solid #1a1a1a; padding-bottom: 3px; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+  .entry { margin-bottom: 8px; }
+  .entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+  .entry-title { font-weight: 700; font-size: 10.5px; }
+  .entry-sub { color: #555; font-size: 10px; font-style: italic; }
+  .entry-date { font-size: 9.5px; color: #666; white-space: nowrap; }
+  .entry-bullets { font-size: 10px; color: #333; padding-left: 0; }
+  .entry-bullets li { list-style: none; position: relative; padding-left: 14px; margin-bottom: 1px; }
+  .entry-bullets li::before { content: "•"; position: absolute; left: 0; color: #333; }
+  .tag { display: inline-block; background: #eee; padding: 1px 6px; border-radius: 2px; font-size: 9.5px; margin-right: 4px; margin-bottom: 3px; }
+  .two-col { display: flex; gap: 28px; }
+  .two-col > div { flex: 1; }
+  .honor-item { font-size: 10px; margin-bottom: 2px; }
+  .honor-item::before { content: "▸ "; }
+  .footer-note { font-size: 9.5px; color: #888; text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== PERSONAL INFORMATION ==================== -->
+<div class="personal">
+  <div class="photo">
+    <img src="photo.jpg" alt="Xiong Zhengyang" onerror="this.parentNode.innerHTML='[Photo]'" />
+  </div>
+  <div class="info">
+    <div class="name">Xiong Zhengyang</div>
+    <div class="row"><span class="label">Age:</span>24</div>
+    <div class="row"><span class="label">Phone:</span>+86 13211832267</div>
+    <div class="row"><span class="label">Email:</span>15377278660@qq.com</div>
+    <div class="row"><span class="label">City:</span>Shanghai, Fengxian</div>
+  </div>
+</div>
+
+<!-- ==================== WORK EXPERIENCE ==================== -->
+<div class="section">
+  <div class="section-title">Work Experience</div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">WeChat AI Assistant · Retail Digital Tool Deployment</span>&nbsp;&nbsp;<span class="entry-sub">Independent Developer</span></div>
+      <div class="entry-date">2025.08 – Present</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Developed a WeChat AI assistant for community convenience stores, featuring intelligent customer service (response &lt;8s), expiring-product push notifications (31.2% CTR), and automated social media copy generation</li>
+      <li>Served 12 small retail clients, built solution templates for bubble tea/pet/study-room verticals; achieved 67% client retention rate and NPS of 82.6</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Xianyu / Xiaohongshu · Entrepreneurship</span>&nbsp;&nbsp;<span class="entry-sub">Solo Entrepreneur</span></div>
+      <div class="entry-date">2025.09 – 2026.05</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Built end-to-end funnel (acquisition → conversion → delivery → retention), completing 57 transactions totaling ¥5,200+; SEO optimization drove 73.5% organic traffic share</li>
+      <li>Offered WeChat AI assistant deployment guides and PPT design services across Xianyu and Xiaohongshu, with top post reaching 23K+ impressions</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Shanghai Feimo Technology Co., Ltd.</span>&nbsp;&nbsp;<span class="entry-sub">Interior Design Assistant</span></div>
+      <div class="entry-date">2025.03 – 2025.07</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Delivered 10+ spatial design proposals; managed brand accounts on Xiaohongshu/Douyin with 18 short videos + 32 image posts, top video reaching 126K+ views</li>
+      <li>Built customer segmentation tagging system for targeted outreach to high-intent prospects, securing 3 orders exceeding ¥28,000 each for full-home window film solutions</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Shanghai Dagou Sports Co., Ltd.</span>&nbsp;&nbsp;<span class="entry-sub">Front Desk Operations</span></div>
+      <div class="entry-date">2025.07 – 2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Managed daily venue operations and member services including traffic scheduling, renewal follow-ups, and space utilization optimization</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Luckin Coffee (Shanghai)</span>&nbsp;&nbsp;<span class="entry-sub">Part-time Barista</span></div>
+      <div class="entry-date">2025.03 – 2025.05</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Averaged 200+ cups daily with zero complaints over 12 consecutive weeks; boosted dessert attachment rate from 18% to 29% (+11%) through FABE upselling techniques</li>
+      <li>Participated in store private-domain growth initiative, adding 437 members via WeCom; designed "Campus Flash Day" campaign that drove 41% traffic increase across 3 universities in a single day</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== PROJECTS ==================== -->
+<div class="section">
+  <div class="section-title">Projects</div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">"Shiguang Station" Campus Convenience Store · Business Plan</span>&nbsp;&nbsp;<span class="entry-sub">Project Lead</span></div>
+      <div class="entry-date">2025.10 – 2025.12</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Conducted competitive analysis within 3km radius (17 stores including FamilyMart/Lawson/liquor shops); applied RFM modeling to identify high-potential student segments and heatmap analysis for optimal store layout</li>
+      <li>Built full financial model (startup capital ¥86,400, daily break-even ¥1,860, gross margin 32.5%); ranked top 3 in course assessment and added to teaching case library</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">National E-Commerce "Three-Creativity" Competition</span>&nbsp;&nbsp;<span class="entry-sub">2nd Prize (University Level)</span></div>
+      <div class="entry-date">2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Designed an AI-powered campus retail solution ("Smart Chain Fresh"), responsible for business model design and pitch deck creation</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">University Innovation & Entrepreneurship Program</span>&nbsp;&nbsp;<span class="entry-sub">Excellence Award</span></div>
+      <div class="entry-date">2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Developed inventory management + AI store-inspection prototype for community convenience stores; pilot store achieved 17.6% monthly GMV uplift</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== MILITARY SERVICE ==================== -->
+<div class="section">
+  <div class="section-title">Military Service</div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">People's Liberation Army · Border Defense</span>&nbsp;&nbsp;<span class="entry-sub">Conscript</span></div>
+      <div class="entry-date">2023.03 – 2025.03</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Stationed at border frontline, participating in patrol and border control missions; developed exceptional resilience and execution capability under high-pressure conditions</li>
+      <li>Awarded Company-Level Class III Merit ×2 (2024.06 / 2024.12); operated company supply application system, gaining familiarity with ERP fundamentals and batch management</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== EDUCATION ==================== -->
+<div class="section">
+  <div class="section-title">Education</div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Shanghai Business School</span>&nbsp;&nbsp;<span class="entry-sub">Retail Management · B.A. (Top-up Degree)</span></div>
+      <div class="entry-date">2025.09 – 2027.06</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Core courses: Retail Data Analytics, Consumer Behavior, Retail Operations Management, Supply Chain Management</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">Shanghai Zhongqiao Vocational & Technical University</span>&nbsp;&nbsp;<span class="entry-sub">AI Technology Applications · Associate Degree</span></div>
+      <div class="entry-date">2020.09 – 2023.06</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>Core courses: Python Data Analysis, Introduction to Machine Learning</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== SKILLS & CERTIFICATES + HONORS ==================== -->
+<div class="two-col">
+  <div class="section">
+    <div class="section-title">Skills & Certificates</div>
+    <div class="honor-item">CET-4 (College English Test Band 4)</div>
+    <div class="honor-item">NCRE Level 2 (MS Office) — Proficient in Pivot Tables / VLOOKUP</div>
+    <div class="honor-item">Mandarin Proficiency Level 2-A</div>
+    <div class="honor-item">Driver's License (C1)</div>
+    <div style="margin-top:6px; font-size:10px;">
+      <strong>Technical Skills:</strong><br/>
+      <span class="tag">AIGC</span>ChatGPT/Midjourney for retail promotional content, A/B test conversion +19%<br/>
+      <span class="tag">Video</span>Jianying/Premiere Pro, produced store traffic-driving videos averaging 37 in-store visits each<br/>
+      <span class="tag">Design</span>Photoshop / Illustrator<br/>
+      <span class="tag">Data</span>SPSS
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">Honors & Awards</div>
+    <div class="honor-item">Company-Level Class III Merit ×2 (2024.06 / 2024.12)</div>
+    <div class="honor-item">National E-Commerce Competition — 2nd Prize, University Level (2025.11)</div>
+    <div class="honor-item">Innovation & Entrepreneurship Program — Excellence Award (2025.11)</div>
+    <div class="honor-item">University Scholarship, 3rd Class (2025)</div>
+  </div>
+</div>
+
+<!-- ==================== CAREER OBJECTIVE (at end) ==================== -->
+<div class="footer-note">
+  <strong>Career Objective:</strong> Chain Retail Operations Trainee ｜ New Retail Private Domain Operations ｜ Community Retail Management<br/>
+  Availability: Immediate ｜ Preferred City: Shanghai ｜ Salary Expectation: ¥5K-8K
+</div>
+
+</body>
+</html>

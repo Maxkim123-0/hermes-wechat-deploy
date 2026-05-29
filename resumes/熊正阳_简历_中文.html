@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "SimSun","宋体",serif; font-size: 11px; line-height: 1.7; color: #222; max-width: 780px; margin: 0 auto; padding: 32px 36px; }
+  .personal { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; }
+  .personal .photo { width: 90px; height: 120px; border: 1px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; background: #f5f5f5; }
+  .personal .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .personal .info { flex: 1; }
+  .personal .info .name { font-family: "SimHei","黑体",sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; margin-bottom: 8px; }
+  .personal .info .row { font-size: 11px; color: #444; margin-bottom: 3px; }
+  .personal .info .row .label { font-weight: 700; min-width: 60px; display: inline-block; }
+  .section { margin-bottom: 14px; page-break-inside: avoid; }
+  .section-title { font-family: "SimHei","黑体",sans-serif; font-size: 13px; font-weight: 700; border-bottom: 1.5px solid #1a1a1a; padding-bottom: 3px; margin-bottom: 8px; letter-spacing: 2px; }
+  .entry { margin-bottom: 8px; }
+  .entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+  .entry-title { font-weight: 700; font-size: 11px; }
+  .entry-sub { color: #555; font-size: 10.5px; }
+  .entry-date { font-size: 10px; color: #666; white-space: nowrap; }
+  .entry-bullets { font-size: 10.5px; color: #333; padding-left: 0; }
+  .entry-bullets li { list-style: none; position: relative; padding-left: 14px; margin-bottom: 1px; }
+  .entry-bullets li::before { content: "•"; position: absolute; left: 0; color: #333; }
+  .tag { display: inline-block; background: #eee; padding: 1px 6px; border-radius: 2px; font-size: 10px; margin-right: 4px; margin-bottom: 3px; }
+  .two-col { display: flex; gap: 28px; }
+  .two-col > div { flex: 1; }
+  .honor-item { font-size: 10.5px; margin-bottom: 2px; }
+  .honor-item::before { content: "▸ "; }
+  .footer-note { font-size: 10px; color: #888; text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 个人信息 ==================== -->
+<div class="personal">
+  <div class="photo">
+    <!-- 替换为你的照片：把图片放到同目录，改下面 src -->
+    <img src="photo.jpg" alt="熊正阳" onerror="this.parentNode.innerHTML='[照片]'" />
+  </div>
+  <div class="info">
+    <div class="name">熊正阳</div>
+    <div class="row"><span class="label">年龄：</span>24</div>
+    <div class="row"><span class="label">电话：</span>13211832267</div>
+    <div class="row"><span class="label">邮箱：</span>15377278660@qq.com</div>
+    <div class="row"><span class="label">城市：</span>上海 · 奉贤</div>
+  </div>
+</div>
+
+<!-- ==================== 工作经历 ==================== -->
+<div class="section">
+  <div class="section-title">工作经历</div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">微信AI助手 · 零售数字化工具部署</span>&nbsp;&nbsp;<span class="entry-sub">独立开发者</span></div>
+      <div class="entry-date">2025.08 – 至今</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>面向社区便利店开发微信AI助手，支持智能客服（响应&lt;8秒）、临期商品促销推送（点击率31.2%）、朋友圈文案自动生成</li>
+      <li>服务12家小微零售客户，沉淀奶茶/宠物/自习室行业解决方案模板，客户复购率67%，NPS净推荐值82.6</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">闲鱼/小红书 · 个人创业</span>&nbsp;&nbsp;<span class="entry-sub">个人创业者</span></div>
+      <div class="entry-date">2025.09 – 2026.05</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>从零跑通获客→转化→交付→复购闭环，累计57单交易额¥5,200+；SEO优化与爆款标题模板实现自然流量占比73.5%</li>
+      <li>提供微信AI助手部署教程+PPT代做服务，闲鱼/小红书双平台运营，单条笔记曝光最高2.3万+</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">上海菲膜科技有限公司</span>&nbsp;&nbsp;<span class="entry-sub">室内设计助理</span></div>
+      <div class="entry-date">2025.03 – 2025.07</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>独立完成10+套空间方案设计；运营小红书/抖音品牌账号，策划短视频18条+图文32篇，单条播放12.6万+</li>
+      <li>搭建客户分层标签体系，针对高意向用户推送定制案例，促成3单客单价超¥28,000的全屋窗膜订单</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">上海大狗体育有限公司</span>&nbsp;&nbsp;<span class="entry-sub">运营前台</span></div>
+      <div class="entry-date">2025.07 – 2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>负责场馆日常运营与会员服务，含客流调度、续费跟进、场地坪效管理</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">瑞幸咖啡（上海）</span>&nbsp;&nbsp;<span class="entry-sub">兼职咖啡师</span></div>
+      <div class="entry-date">2025.03 – 2025.05</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>日均出杯200+，连续12周零客诉记录；通过FABE话术推荐"咖啡+甜品"组合，甜品连带率由18%提升至29%（+11%）</li>
+      <li>参与门店私域裂变计划，企业微信沉淀会员437人；独立设计"校园快闪日"活动方案，单日拉新3所高校客流增长41%</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 项目经历 ==================== -->
+<div class="section">
+  <div class="section-title">项目经历</div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">「拾光驿站」校园便利店创业策划</span>&nbsp;&nbsp;<span class="entry-sub">项目负责人</span></div>
+      <div class="entry-date">2025.10 – 2025.12</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>完成3km半径竞品扫描（全家/罗森/烟酒店共17家），运用RFM模型筛选高潜学生客群，基于热力图确定黄金三角动线</li>
+      <li>编制完整财务模型（启动资金¥86,400、盈亏平衡日均¥1,860、综合毛利32.5%），方案获评课程TOP3并纳入教学案例库</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">全国大学生电子商务"三创赛"</span>&nbsp;&nbsp;<span class="entry-sub">校级二等奖</span></div>
+      <div class="entry-date">2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>基于AI赋能校园零售场景，设计"智链鲜达"方案，负责商业模型设计与路演PPT制作</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">校创新创业训练计划</span>&nbsp;&nbsp;<span class="entry-sub">优秀奖</span></div>
+      <div class="entry-date">2025.11</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>聚焦社区便利店数字化，开发进销存+AI巡店原型工具，试点门店月GMV提升17.6%</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 服役经历 ==================== -->
+<div class="section">
+  <div class="section-title">服役经历</div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">中国人民解放军 · 边防一线</span>&nbsp;&nbsp;<span class="entry-sub">义务兵</span></div>
+      <div class="entry-date">2023.03 – 2025.03</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>驻守边防一线，参与日常巡逻执勤与边境管控任务，在高压环境下锤炼出极强的抗压能力与执行力</li>
+      <li>荣立连三等功2次（2024.06 / 2024.12）；参与连队被装申领系统操作，熟悉ERP基础逻辑与批次管理</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 教育背景 ==================== -->
+<div class="section">
+  <div class="section-title">教育背景</div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">上海商学院</span>&nbsp;&nbsp;<span class="entry-sub">零售业管理 · 本科（专升本）</span></div>
+      <div class="entry-date">2025.09 – 2027.06</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>专业课：零售数据分析、消费者行为学、零售业态运营实务、供应链管理</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <div class="entry-header">
+      <div><span class="entry-title">上海中侨职业技术大学</span>&nbsp;&nbsp;<span class="entry-sub">人工智能技术应用 · 专科</span></div>
+      <div class="entry-date">2020.09 – 2023.06</div>
+    </div>
+    <ul class="entry-bullets">
+      <li>主修：Python数据分析、机器学习导论</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 技能证书 + 荣誉奖励 ==================== -->
+<div class="two-col">
+  <div class="section">
+    <div class="section-title">技能证书</div>
+    <div class="honor-item">大学英语四级（CET-4）</div>
+    <div class="honor-item">计算机二级（MS Office）— 熟练Excel透视表/VLOOKUP</div>
+    <div class="honor-item">普通话二级甲等</div>
+    <div class="honor-item">机动车驾驶证（C1）</div>
+    <div style="margin-top:6px; font-size:10.5px;">
+      <strong>技术栈：</strong><br/>
+      <span class="tag">AIGC工具</span>ChatGPT/Midjourney生成零售促销文案，AB测试转化率+19%<br/>
+      <span class="tag">短视频</span>剪映/PR，独立制作便利店引流视频，单条平均到店37人<br/>
+      <span class="tag">视觉设计</span>PS/AI<br/>
+      <span class="tag">数据分析</span>SPSS
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">荣誉奖励</div>
+    <div class="honor-item">连三等功 ×2（2024.06 / 2024.12）</div>
+    <div class="honor-item">三创赛校级二等奖（2025.11）</div>
+    <div class="honor-item">校创新创业训练计划优秀奖（2025.11）</div>
+    <div class="honor-item">校三等奖学金（2025）</div>
+  </div>
+</div>
+
+<!-- ==================== 求职意向（末尾） ==================== -->
+<div class="footer-note">
+  <strong>求职意向：</strong>连锁零售营运管培生 ｜ 新零售私域运营 ｜ 社区零售运营管理<br/>
+  到岗时间：随时 ｜ 期望城市：上海 ｜ 期望薪资：5K-8K
+</div>
+
+</body>
+</html>
