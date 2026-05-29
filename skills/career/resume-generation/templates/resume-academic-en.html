@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Georgia","Times New Roman",serif; font-size: 10.5px; line-height: 1.65; color: #222; max-width: 780px; margin: 0 auto; padding: 32px 36px; }
+  .personal { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; }
+  .personal .photo { width: 90px; height: 120px; border: 1px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #999; background: #f5f5f5; }
+  .personal .photo img { width: 100%; height: 100%; object-fit: cover; }
+  .personal .info { flex: 1; }
+  .personal .info .name { font-family: "Arial","Helvetica",sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+  .personal .info .row { font-size: 10.5px; color: #444; margin-bottom: 3px; }
+  .personal .info .row .label { font-weight: 700; min-width: 55px; display: inline-block; }
+  .section { margin-bottom: 14px; page-break-inside: avoid; }
+  .section-title { font-family: "Arial","Helvetica",sans-serif; font-size: 12px; font-weight: 700; border-bottom: 1.5px solid #1a1a1a; padding-bottom: 3px; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+  .entry { margin-bottom: 8px; }
+  .entry-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+  .entry-title { font-weight: 700; font-size: 10.5px; }
+  .entry-sub { color: #555; font-size: 10px; font-style: italic; }
+  .entry-date { font-size: 9.5px; color: #666; white-space: nowrap; }
+  .entry-bullets { font-size: 10px; color: #333; padding-left: 0; }
+  .entry-bullets li { list-style: none; position: relative; padding-left: 14px; margin-bottom: 1px; }
+  .entry-bullets li::before { content: "•"; position: absolute; left: 0; color: #333; }
+  .tag { display: inline-block; background: #eee; padding: 1px 6px; border-radius: 2px; font-size: 9.5px; margin-right: 4px; margin-bottom: 3px; }
+  .two-col { display: flex; gap: 28px; }
+  .two-col > div { flex: 1; }
+  .honor-item { font-size: 10px; margin-bottom: 2px; }
+  .honor-item::before { content: "▸ "; }
+  .footer-note { font-size: 9.5px; color: #888; text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+</style>
+</head>
+<body>
+<!-- 
+  Academic Format · English Resume Template
+  Structure: Personal(photo) → Work → Projects → Military → Education → Skills/Honors → Career Objective(end)
+  Replace all {{...}} placeholders
+-->
+<!-- ==================== PERSONAL INFORMATION ==================== -->
+<div class="personal">
+  <div class="photo">
+    <img src="photo.jpg" alt="{{NAME}}" onerror="this.parentNode.innerHTML='[Photo]'" />
+  </div>
+  <div class="info">
+    <div class="name">{{NAME}}</div>
+    <div class="row"><span class="label">Age:</span>{{AGE}}</div>
+    <div class="row"><span class="label">Phone:</span>{{PHONE}}</div>
+    <div class="row"><span class="label">Email:</span>{{EMAIL}}</div>
+    <div class="row"><span class="label">City:</span>{{CITY}}</div>
+  </div>
+</div>
+
+<!-- ==================== WORK EXPERIENCE ==================== -->
+<div class="section">
+  <div class="section-title">Work Experience</div>
+  {{WORK_EXPERIENCE}}
+</div>
+
+<!-- ==================== PROJECTS ==================== -->
+<div class="section">
+  <div class="section-title">Projects</div>
+  {{PROJECTS}}
+</div>
+
+<!-- ==================== MILITARY SERVICE ==================== -->
+<div class="section">
+  <div class="section-title">Military Service</div>
+  {{MILITARY}}
+</div>
+
+<!-- ==================== EDUCATION ==================== -->
+<div class="section">
+  <div class="section-title">Education</div>
+  {{EDUCATION}}
+</div>
+
+<!-- ==================== SKILLS + HONORS ==================== -->
+<div class="two-col">
+  <div class="section">
+    <div class="section-title">Skills & Certificates</div>
+    {{SKILLS}}
+  </div>
+  <div class="section">
+    <div class="section-title">Honors & Awards</div>
+    {{HONORS}}
+  </div>
+</div>
+
+<!-- ==================== CAREER OBJECTIVE (end) ==================== -->
+<div class="footer-note">
+  {{CAREER_OBJECTIVE}}
+</div>
+
+</body>
+</html>
