@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026秋招投递助手 · 提前批+正式批一站追踪</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <style>
 :root {
   --white: #ffffff; --warm-white: #f6f5f4; --warm-dark: #31302e;
@@ -421,7 +421,8 @@ function updateDashboard() {
   document.getElementById('stat-interview').textContent = interview;
   document.getElementById('stat-offer').textContent = offer;
 
-  // Funnel chart
+  if (typeof Chart === 'undefined') return;
+  try {
   const ctx1 = document.getElementById('funnelChart');
   if(funnelChart) funnelChart.destroy();
   const applied = total - written - interview - offer;
@@ -437,6 +438,7 @@ function updateDashboard() {
   }, {});
   const colors = ['#0075de','#2a9d99','#dd5b00','#ff64c8','#1aae39','#7c3aed','#f59e0b','#3b82f6','#10b981','#f43f5e'];
   industryChart = new Chart(ctx2, { type:'doughnut', data:{ labels:Object.keys(industries), datasets:[{ data:Object.values(industries), backgroundColor:colors.slice(0,Object.keys(industries).length), borderColor:'white', borderWidth:2 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ title:{display:true,text:'🎯 投递行业分布',font:{size:14,weight:'600'},color:'rgba(0,0,0,0.95)'}, legend:{position:'bottom',labels:{padding:12,usePointStyle:true,pointStyleWidth:8}} } });
+  } catch(e) { console.warn('Chart init failed:', e.message); }
 }
 
 function init() {
