@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026秋招投递助手 · 提前批+正式批一站追踪</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <style>
 :root {
   --white: #ffffff; --warm-white: #f6f5f4; --warm-dark: #31302e;
@@ -16,39 +14,30 @@
   --red-bg: #fff5f5; --border: 1px solid rgba(0,0,0,0.1);
   --card-shadow: rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.84688px, rgba(0,0,0,0.02) 0px 0.8px 2.925px, rgba(0,0,0,0.01) 0px 0.175px 1.04062px;
   --deep-shadow: rgba(0,0,0,0.01) 0px 1px 3px, rgba(0,0,0,0.02) 0px 3px 7px, rgba(0,0,0,0.02) 0px 7px 15px, rgba(0,0,0,0.04) 0px 14px 28px, rgba(0,0,0,0.05) 0px 23px 52px;
-  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-pill: 9999px;
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 9999px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  color: var(--near-black); background: var(--white); line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--near-black); background: var(--white); line-height: 1.5; -webkit-font-smoothing: antialiased; }
 nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: var(--border); padding: 0 24px; }
 .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .nav-brand { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .nav-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 .nav-links { display: flex; gap: 24px; list-style: none; }
-.nav-links a { font-size: 15px; font-weight: 500; color: var(--warm-gray-500); text-decoration: none; transition: color 0.15s; }
-.nav-links a:hover { color: var(--near-black); }
-.nav-cta { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.15s; }
-.nav-cta:hover { background: var(--blue-active); }
+.nav-links a { font-size: 15px; font-weight: 500; color: var(--warm-gray-500); text-decoration: none; }
+.nav-cta { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; }
 .nav-cta:active { transform: scale(0.95); }
-.menu-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--near-black); }
-
+.menu-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; }
 .section { padding: 64px 24px; }
 .section.warm { background: var(--warm-white); }
 .section-inner { max-width: 1200px; margin: 0 auto; }
-
 .hero { padding: 80px 24px 64px; text-align: center; }
-.hero-badge { display: inline-block; background: var(--blue-bg); color: var(--blue-text); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); letter-spacing: 0.125px; margin-bottom: 24px; }
-.hero h1 { font-size: clamp(32px, 5vw, 64px); font-weight: 700; line-height: 1.04; letter-spacing: -0.02em; margin-bottom: 16px; }
-.hero p { font-size: 20px; font-weight: 400; color: var(--warm-gray-500); max-width: 640px; margin: 0 auto 32px; }
+.hero-badge { display: inline-block; background: var(--blue-bg); color: var(--blue-text); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 24px; }
+.hero h1 { font-size: clamp(32px, 5vw, 64px); font-weight: 700; line-height: 1.04; margin-bottom: 16px; }
+.hero p { font-size: 20px; color: var(--warm-gray-500); max-width: 640px; margin: 0 auto 32px; }
 .hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
 .hero-stat { text-align: center; }
-.hero-stat .num { font-size: 40px; font-weight: 700; line-height: 1; }
+.hero-stat .num { font-size: 40px; font-weight: 700; }
 .hero-stat .num.red { color: var(--red); }
 .hero-stat .label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
 .countdown-bar { display: inline-flex; align-items: center; gap: 8px; background: var(--red-bg); border: 1px solid rgba(224,62,62,0.2); border-radius: var(--radius-pill); padding: 8px 16px; margin-top: 24px; }
@@ -58,38 +47,44 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92)
 .timeline-track { position: relative; padding: 32px 0; }
 .timeline-line { position: absolute; top: 56px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08); }
 .timeline-items { display: flex; justify-content: space-between; position: relative; z-index: 1; }
-.timeline-item { text-align: center; flex: 1; position: relative; }
-.timeline-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--white); border: 2px solid rgba(0,0,0,0.15); margin: 0 auto 12px; position: relative; z-index: 2; }
+.timeline-item { text-align: center; flex: 1; }
+.timeline-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--white); border: 2px solid rgba(0,0,0,0.15); margin: 0 auto 12px; }
 .timeline-dot.active { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px rgba(0,117,222,0.15); }
 .timeline-dot.passed { background: var(--teal); border-color: var(--teal); }
 .timeline-month { font-size: 14px; font-weight: 600; color: var(--warm-gray-500); margin-bottom: 4px; }
 .timeline-label { font-size: 13px; color: var(--warm-gray-300); }
 
-.section-title { font-size: clamp(24px, 3vw, 40px); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 8px; }
+.section-title { font-size: clamp(24px, 3vw, 40px); font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
 .section-subtitle { font-size: 16px; color: var(--warm-gray-500); margin-bottom: 32px; }
 
 /* Dashboard */
-.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .stat-card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); text-align: center; }
-.stat-card .stat-num { font-size: 36px; font-weight: 700; color: var(--near-black); }
+.stat-card .stat-num { font-size: 36px; font-weight: 700; }
 .stat-card .stat-label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
-.stat-card.blue .stat-num { color: var(--blue); }
-.stat-card.orange .stat-num { color: var(--orange); }
-.stat-card.pink .stat-num { color: var(--pink); }
-.stat-card.green .stat-num { color: var(--green); }
-.chart-container { position: relative; height: 280px; background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--card-shadow); }
+.stat-card.b .stat-num { color: var(--blue); }
+.stat-card.o .stat-num { color: var(--orange); }
+.stat-card.p .stat-num { color: var(--pink); }
+.stat-card.g .stat-num { color: var(--green); }
+/* Bar chart */
+.bar-chart { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); }
+.bar-chart h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.bar-label { width: 60px; font-size: 13px; font-weight: 600; text-align: right; color: var(--warm-gray-500); }
+.bar-track { flex: 1; height: 28px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; color: white; }
+.bar-count { width: 40px; font-size: 14px; font-weight: 700; color: var(--near-black); }
 
 /* Search */
 .search-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
 .search-input { flex: 1; min-width: 200px; padding: 10px 16px; border: var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; background: var(--white); }
 .search-input:focus { outline: 2px solid var(--blue); }
 .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.filter-chip { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.filter-chip:hover, .filter-chip.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
+.filter-chip { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; white-space: nowrap; }
+.filter-chip.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
 
 .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-.card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); transition: box-shadow 0.2s, border-color 0.2s; position: relative; }
-.card:hover { box-shadow: var(--deep-shadow); }
+.card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); position: relative; }
 .card.urgent { border-color: rgba(224,62,62,0.3); background: var(--red-bg); }
 .card .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
 .card h3 { font-size: 18px; font-weight: 700; }
@@ -98,69 +93,59 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92)
 .card .deadline.ok { color: var(--warm-gray-500); }
 .card .deadline.warn { color: var(--orange); }
 .card .deadline.urgent { color: var(--red); }
-.card .desc { font-size: 15px; color: var(--warm-gray-500); line-height: 1.45; margin-bottom: 8px; }
-.card .referral { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+.card .desc { font-size: 15px; color: var(--warm-gray-500); margin-bottom: 8px; }
+.card .referral { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 8px; }
 .card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.card .tags span { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); letter-spacing: 0.125px; }
+.card .tags span { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); }
 .tag-blue { background: var(--blue-bg); color: var(--blue-text); }
-.tag-green { background: #edf8f0; color: #1aae39; }
 .tag-red { background: var(--red-bg); color: var(--red); }
 .card .link { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; }
-.card .link:hover { text-decoration: underline; }
-.card .source-tag { position: absolute; top: 12px; right: 12px; font-size: 10px; color: var(--warm-gray-300); font-weight: 500; }
+.card .source-tag { position: absolute; top: 12px; right: 12px; font-size: 10px; color: var(--warm-gray-300); }
 
 /* Tracker */
 .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
 .view-toggle { display: flex; gap: 4px; }
-.view-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); color: var(--warm-gray-500); cursor: pointer; transition: all 0.15s; }
+.view-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); color: var(--warm-gray-500); cursor: pointer; }
 .view-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
 .tracker-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-.filter-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; transition: all 0.15s; }
-.filter-btn:hover, .filter-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
-
-/* Table view */
+.filter-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; }
+.filter-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
 .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: var(--border); }
 table { width: 100%; border-collapse: collapse; min-width: 700px; background: var(--white); }
-th { text-align: left; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--warm-gray-300); border-bottom: var(--border); text-transform: uppercase; letter-spacing: 0.5px; }
-td { padding: 12px 16px; font-size: 14px; border-bottom: var(--border); vertical-align: middle; }
+th { text-align: left; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--warm-gray-300); border-bottom: var(--border); }
+td { padding: 12px 16px; font-size: 14px; border-bottom: var(--border); }
 tr:last-child td { border-bottom: none; }
-.status-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); letter-spacing: 0.125px; }
-.status-已投递 { background: var(--blue-bg); color: var(--blue-text); }
-.status-笔试中 { background: #fff6ed; color: #dd5b00; }
-.status-面试中 { background: #fff0f8; color: #ff64c8; }
-.status-offer { background: #edf8f0; color: #1aae39; }
-.status-已拒 { background: #f5f0f0; color: #b33a3a; }
+.status-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); }
+.s-已投递 { background: var(--blue-bg); color: var(--blue-text); }
+.s-笔试中 { background: #fff6ed; color: #dd5b00; }
+.s-面试中 { background: #fff0f8; color: #ff64c8; }
+.s-Offer { background: #edf8f0; color: #1aae39; }
+.s-已拒 { background: #f5f0f0; color: #b33a3a; }
 
-/* Kanban view */
-.kanban-board { display: none; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; overflow-x: auto; }
-.kanban-col { background: var(--warm-white); border-radius: var(--radius-lg); padding: 12px; min-height: 200px; }
-.kanban-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; padding: 0 4px; color: var(--warm-gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
-.kanban-col .col-count { font-weight: 400; color: var(--warm-gray-300); }
-.kanban-card { background: var(--white); border: var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; box-shadow: var(--card-shadow); transition: box-shadow 0.2s; }
-.kanban-card:hover { box-shadow: var(--deep-shadow); }
+/* Kanban */
+.kanban-board { display: none; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.kanban-col { background: var(--warm-white); border-radius: var(--radius-lg); padding: 12px; min-height: 150px; }
+.kanban-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--warm-gray-500); }
+.kanban-card { background: var(--white); border: var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; box-shadow: var(--card-shadow); }
 .kanban-card .kc-company { font-size: 15px; font-weight: 700; }
-.kanban-card .kc-position { font-size: 13px; color: var(--warm-gray-500); margin: 2px 0 4px; }
+.kanban-card .kc-position { font-size: 13px; color: var(--warm-gray-500); margin: 2px 0; }
 .kanban-card .kc-date { font-size: 12px; color: var(--warm-gray-300); }
-.kanban-card .kc-note { font-size: 12px; color: var(--warm-gray-500); margin-top: 4px; font-style: italic; }
 
-.add-row-form { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: flex-end; }
+.add-row-form { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 .add-row-form input, .add-row-form select { padding: 8px 12px; border: var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--white); }
 .add-row-form input:focus, .add-row-form select:focus { outline: 2px solid var(--blue); }
-.add-row-form button { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
-.add-row-form button:hover { background: var(--blue-active); }
+.add-row-form button { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
 
 .resource-list { display: flex; flex-direction: column; gap: 12px; }
-.resource-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border: var(--border); border-radius: var(--radius-md); box-shadow: var(--card-shadow); transition: box-shadow 0.2s; gap: 16px; }
-.resource-item:hover { box-shadow: var(--deep-shadow); }
+.resource-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border: var(--border); border-radius: var(--radius-md); box-shadow: var(--card-shadow); gap: 16px; }
 .resource-item .r-info { flex: 1; }
 .resource-item .r-title { font-size: 16px; font-weight: 600; }
 .resource-item .r-desc { font-size: 14px; color: var(--warm-gray-500); margin-top: 2px; }
 .resource-item .r-link { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; white-space: nowrap; }
-.resource-item .r-link:hover { text-decoration: underline; }
 
 footer { padding: 32px 24px; border-top: var(--border); text-align: center; font-size: 14px; color: var(--warm-gray-300); }
 footer a { color: var(--blue); }
-.no-results { text-align: center; padding: 48px 16px; color: var(--warm-gray-300); display: none; }
+.no-results { text-align: center; padding: 48px; color: var(--warm-gray-300); display: none; }
 
 @media (max-width: 768px) {
   .nav-links { display: none; } .menu-btn { display: block; }
@@ -170,7 +155,7 @@ footer a { color: var(--blue); }
   .section { padding: 40px 16px; } .section-title { font-size: 24px; }
   .card-grid { grid-template-columns: 1fr; }
   .dashboard-grid { grid-template-columns: 1fr 1fr; }
-  .search-bar { flex-direction: column; } .search-input { min-width: 100%; }
+  .search-bar { flex-direction: column; }
   .timeline-track { padding: 0; }
   .timeline-line { top: 0; bottom: 0; left: 15px; right: auto; width: 2px; height: auto; }
   .timeline-items { flex-direction: column; gap: 24px; padding-left: 40px; }
@@ -178,10 +163,8 @@ footer a { color: var(--blue); }
   .timeline-dot { position: absolute; left: -32px; top: 4px; margin: 0; }
   .kanban-board { grid-template-columns: 1fr; }
   .resource-item { flex-direction: column; align-items: flex-start; }
-  .add-row-form { flex-direction: column; }
-  .add-row-form input, .add-row-form select { width: 100%; }
 }
-@media (max-width: 480px) { .hero-stats { flex-direction: column; gap: 16px; align-items: center; } .dashboard-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .hero-stats { flex-direction: column; gap: 16px; } .dashboard-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -206,23 +189,25 @@ footer a { color: var(--blue); }
     <div class="hero-stat"><div class="num red" id="urgent-count">—</div><div class="label">即将截止</div></div>
     <div class="hero-stat"><div class="num" id="my-applications">0</div><div class="label">我的投递</div></div>
   </div>
-  <div class="countdown-bar" id="countdown-bar" style="display:none"><span style="font-size:16px">⏰</span><span class="text" id="countdown-text"></span></div>
+  <div class="countdown-bar" id="countdown-bar" style="display:none"><span>⏰</span><span class="text" id="countdown-text"></span></div>
 </section>
 
-<!-- Dashboard -->
 <section class="section warm" id="dashboard">
   <div class="section-inner">
     <h2 class="section-title">📊 投递总览</h2>
     <p class="section-subtitle">全局数据一目了然</p>
-    <div class="dashboard-grid" id="stats-cards">
-      <div class="stat-card blue"><div class="stat-num" id="stat-total">0</div><div class="stat-label">总投递</div></div>
-      <div class="stat-card orange"><div class="stat-num" id="stat-written">0</div><div class="stat-label">笔试中</div></div>
-      <div class="stat-card pink"><div class="stat-num" id="stat-interview">0</div><div class="stat-label">面试中</div></div>
-      <div class="stat-card green"><div class="stat-num" id="stat-offer">0</div><div class="stat-label">已获Offer</div></div>
+    <div class="dashboard-grid">
+      <div class="stat-card b"><div class="stat-num" id="stat-total">0</div><div class="stat-label">总投递</div></div>
+      <div class="stat-card o"><div class="stat-num" id="stat-written">0</div><div class="stat-label">笔试中</div></div>
+      <div class="stat-card p"><div class="stat-num" id="stat-interview">0</div><div class="stat-label">面试中</div></div>
+      <div class="stat-card g"><div class="stat-num" id="stat-offer">0</div><div class="stat-label">已获Offer</div></div>
     </div>
-    <div class="dashboard-grid" style="margin-top:16px">
-      <div class="chart-container"><canvas id="funnelChart"></canvas></div>
-      <div class="chart-container"><canvas id="industryChart"></canvas></div>
+    <div class="bar-chart">
+      <h4>📈 投递漏斗</h4>
+      <div class="bar-row"><span class="bar-label">已投递</span><div class="bar-track"><div class="bar-fill" id="bar-applied" style="width:0%;background:#0075de">0</div></div></div>
+      <div class="bar-row"><span class="bar-label">笔试中</span><div class="bar-track"><div class="bar-fill" id="bar-written" style="width:0%;background:#dd5b00">0</div></div></div>
+      <div class="bar-row"><span class="bar-label">面试中</span><div class="bar-track"><div class="bar-fill" id="bar-interview" style="width:0%;background:#ff64c8">0</div></div></div>
+      <div class="bar-row"><span class="bar-label">Offer</span><div class="bar-track"><div class="bar-fill" id="bar-offer" style="width:0%;background:#1aae39">0</div></div></div>
     </div>
   </div>
 </section>
@@ -254,7 +239,7 @@ footer a { color: var(--blue); }
       <div class="filter-chips" id="filter-chips"></div>
     </div>
     <div class="card-grid" id="company-cards"></div>
-    <div class="no-results" id="no-results"><div style="font-size:40px;margin-bottom:8px">🔍</div><div style="font-size:15px">没找到匹配的公司</div></div>
+    <div class="no-results" id="no-results"><div style="font-size:40px;margin-bottom:8px">🔍</div><div>没找到匹配的公司</div></div>
   </div>
 </section>
 
@@ -278,10 +263,10 @@ footer a { color: var(--blue); }
     </div>
     <div class="table-wrap" id="table-view"><table><thead><tr><th>公司</th><th>岗位</th><th>投递日期</th><th>状态</th><th>备注</th><th>操作</th></tr></thead><tbody id="tracker-body"></tbody></table></div>
     <div class="kanban-board" id="kanban-view">
-      <div class="kanban-col"><h4>已投递 <span class="col-count" id="kanban-count-已投递"></span></h4><div id="kanban-已投递"></div></div>
-      <div class="kanban-col"><h4>笔试中 <span class="col-count" id="kanban-count-笔试中"></span></h4><div id="kanban-笔试中"></div></div>
-      <div class="kanban-col"><h4>面试中 <span class="col-count" id="kanban-count-面试中"></span></h4><div id="kanban-面试中"></div></div>
-      <div class="kanban-col"><h4>Offer <span class="col-count" id="kanban-count-Offer"></span></h4><div id="kanban-Offer"></div></div>
+      <div class="kanban-col"><h4>已投递 <span id="kc-已投递"></span></h4><div id="kan-已投递"></div></div>
+      <div class="kanban-col"><h4>笔试中 <span id="kc-笔试中"></span></h4><div id="kan-笔试中"></div></div>
+      <div class="kanban-col"><h4>面试中 <span id="kc-面试中"></span></h4><div id="kan-面试中"></div></div>
+      <div class="kanban-col"><h4>Offer <span id="kc-Offer"></span></h4><div id="kan-Offer"></div></div>
     </div>
     <div class="add-row-form">
       <input type="text" id="input-company" placeholder="公司名" style="width:140px">
@@ -299,154 +284,103 @@ footer a { color: var(--blue); }
     <h2 class="section-title">面经 & 笔试资料</h2>
     <p class="section-subtitle">刷题、面经、笔经，一站式收录</p>
     <div class="resource-list">
-      <div class="resource-item"><div class="r-info"><div class="r-title">牛客网 · 校招题库</div><div class="r-desc">历年真题、面经、笔经，校招必备</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">进入 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">LeetCode · 算法刷题</div><div class="r-desc">Hot 100 + 剑指Offer，技术岗必刷</div></div><a href="https://leetcode.cn/" target="_blank" class="r-link">进入 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">小红书 · 秋招经验</div><div class="r-desc">搜索"秋招面经"，实战经验帖</div></div><a href="https://www.xiaohongshu.com/search_result?keyword=秋招面经" target="_blank" class="r-link">搜索 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">知乎 · 校招攻略</div><div class="r-desc">时间线、简历写法、面试避坑合集</div></div><a href="https://zhuanlan.zhihu.com/p/1954577401213330967" target="_blank" class="r-link">阅读 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">北森/赛码 · 在线测评</div><div class="r-desc">行测、性格测试、图形推理练手感</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">练习 →</a></div>
+      <div class="resource-item"><div class="r-info"><div class="r-title">牛客网 · 校招题库</div><div class="r-desc">历年真题、面经、笔经</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">进入 →</a></div>
+      <div class="resource-item"><div class="r-info"><div class="r-title">LeetCode · 算法刷题</div><div class="r-desc">Hot 100 + 剑指Offer</div></div><a href="https://leetcode.cn/" target="_blank" class="r-link">进入 →</a></div>
+      <div class="resource-item"><div class="r-info"><div class="r-title">小红书 · 秋招经验</div><div class="r-desc">搜索"秋招面经"</div></div><a href="https://www.xiaohongshu.com/search_result?keyword=秋招面经" target="_blank" class="r-link">搜索 →</a></div>
+      <div class="resource-item"><div class="r-info"><div class="r-title">知乎 · 校招攻略</div><div class="r-desc">时间线、简历、面试避坑</div></div><a href="https://zhuanlan.zhihu.com/p/1954577401213330967" target="_blank" class="r-link">阅读 →</a></div>
+      <div class="resource-item"><div class="r-info"><div class="r-title">北森/赛码 · 在线测评</div><div class="r-desc">行测、性格测试练手感</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">练习 →</a></div>
     </div>
   </div>
 </section>
 
 <footer>
-  2026秋招投递助手 · 数据每3天自动更新 · <span id="update-time"></span><br>
-  数据来源公开信息 · 投递记录存于本地 · <a href="https://campus2026.top" target="_blank">校招汇总参考</a>
+  秋招投递助手 2026 · 数据定期更新 · 投递记录存于本地<br>
+  <a href="https://campus2026.top" target="_blank">校招汇总参考</a> · 最后更新 2026-05-30
 </footer>
 
 <script>
-const NOW = new Date(), DAY_MS = 86400000, URGENT_DAYS = 7, WARN_DAYS = 21;
-function daysUntil(d) { if(!d) return null; return Math.ceil((new Date(d+'T00:00:00+08:00') - NOW) / DAY_MS); }
-function dlClass(d) { if(d===null) return 'ok'; if(d<0) return 'urgent'; if(d<=URGENT_DAYS) return 'urgent'; if(d<=WARN_DAYS) return 'warn'; return 'ok'; }
-function dlLabel(d) { if(d===null) return ''; if(d<0) return `已截止 ${Math.abs(d)} 天`; if(d===0) return '今天截止！'; if(d===1) return '明天截止！'; if(d<=URGENT_DAYS) return `⏰ ${d} 天后截止`; if(d<=WARN_DAYS) return `还有 ${d} 天`; return `${d} 天后截止`; }
+// ═══════ 公司数据（内嵌，零外部依赖）═══════
+var CAMPUS_DATA = [
+  {name:"字节跳动", industry:"互联网", tags:["研发+23%","5000+Offer"], url:"https://jobs.bytedance.com/campus", desc:"8月4日开启，研发岗需求暴增", deadline:"2026-09-15", source:"官网", referral:""},
+  {name:"阿里巴巴", industry:"互联网", tags:["7000+Offer","AI岗>60%"], url:"https://campus.alibaba.com", desc:"8月5日启动，15个业务集团齐招", deadline:"2026-09-20", source:"官网", referral:""},
+  {name:"腾讯", industry:"互联网", tags:["技术+产品"], url:"https://join.qq.com/", desc:"常规校招+阅文集团同步", deadline:"2026-09-25", source:"官网", referral:""},
+  {name:"京东", industry:"互联网+零售", tags:["3.5万岗位","零售/科技"], url:"https://campus.jd.com/", desc:"7月28日启动，岗位量大管饱", deadline:"2026-08-30", source:"官网", referral:""},
+  {name:"美团", industry:"互联网", tags:["6000人","技术>1/3"], url:"https://hr.meituan.com/web/campus", desc:"技术+运营双线招聘", deadline:"2026-09-15", source:"官网", referral:""},
+  {name:"百度", industry:"互联网", tags:["提前批7.20","AI优先"], url:"https://talent.baidu.com/", desc:"提前批7月20日开启", deadline:"2026-08-15", source:"官网", referral:""},
+  {name:"小红书", industry:"互联网", tags:["北上广深杭"], url:"https://job.xiaohongshu.com/campus", desc:"内容社区增长期", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"快手", industry:"互联网", tags:["北京为主"], url:"https://campus.kuaishou.cn/", desc:"短视频赛道持续扩招", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"小米", industry:"硬件+互联网", tags:["全国多地"], url:"https://hr.xiaomi.com/campus", desc:"手机+汽车+IoT全链", deadline:"2026-09-15", source:"官网", referral:""},
+  {name:"网易", industry:"互联网", tags:["游戏+音乐+教育"], url:"https://campus.163.com/", desc:"多业务线同步招聘", deadline:"2026-09-20", source:"官网", referral:""},
+  {name:"拼多多", industry:"电商", tags:["上海","增长快"], url:"https://careers.pinduoduo.com/", desc:"电商新贵，运营+供应链", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"蔚来", industry:"新能源", tags:["汽车+智能化"], url:"https://campus.nio.com/", desc:"新能源车企，岗位多元", deadline:"2026-10-15", source:"官网", referral:""},
+  {name:"Shopee", industry:"电商", tags:["深圳","东南亚"], url:"https://app.mokahr.com/campus_apply/shopee/2962/", desc:"跨境电商赛道", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"米哈游", industry:"游戏", tags:["上海/深圳"], url:"https://campus.mihoyo.com/", desc:"游戏行业顶流", deadline:"2026-09-15", source:"官网", referral:""},
+  {name:"哔哩哔哩", industry:"互联网", tags:["北上渝"], url:"https://jobs.bilibili.com/", desc:"Z世代社区", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"vivo", industry:"硬件", tags:["多地"], url:"https://hr.vivo.com/", desc:"手机+IoT", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"OPPO", industry:"硬件", tags:["10城"], url:"https://career.oppo.com/", desc:"手机+芯片+IoT", deadline:"2026-09-30", source:"官网", referral:""},
+  {name:"英特尔", industry:"半导体", tags:["京沪蓉"], url:"https://jobs.intel.com/", desc:"芯片巨头", deadline:"2026-10-31", source:"官网", referral:""},
+  {name:"宝洁", industry:"快消", tags:["管培生","8-9月"], url:"https://careers.pg.com.cn/", desc:"快消巨头，零售管理对口", deadline:"2026-09-20", source:"官网", referral:""},
+  {name:"联合利华", industry:"快消", tags:["管培生","9月"], url:"https://www.unilever.com.cn/careers/", desc:"快消管培，供应链+市场", deadline:"2026-10-15", source:"官网", referral:""},
+  {name:"欧莱雅", industry:"快消", tags:["管培生"], url:"https://careers.loreal.com/", desc:"美妆快消，品牌管理方向", deadline:"2026-10-15", source:"官网", referral:""},
+  {name:"可口可乐", industry:"快消", tags:["管培生","上海"], url:"https://www.coca-colacompany.com/careers", desc:"饮料巨头，上海总部", deadline:"2026-10-31", source:"官网", referral:""},
+  {name:"百胜中国", industry:"餐饮零售", tags:["管培生"], url:"https://careers.yumchina.com/", desc:"餐饮零售龙头，门店管理", deadline:"2026-10-31", source:"官网", referral:""},
+  {name:"沃尔玛", industry:"零售", tags:["管培生","山姆"], url:"https://careers.walmart.cn/", desc:"全球零售第一", deadline:"2026-10-31", source:"官网", referral:""},
+  {name:"华润万家", industry:"零售", tags:["国企","全国"], url:"https://crc.wintalent.cn/", desc:"央企零售，稳定有保障", deadline:"2026-10-31", source:"官网", referral:""},
+  {name:"知乎", industry:"互联网", tags:["北京"], url:"https://app.mokahr.com/campus_apply/zhihu/3818/", desc:"内容平台校招", deadline:"2026-09-30", source:"官网", referral:""}
+];
 
-// Company cards
-function renderCompanies() {
-  const grid = document.getElementById('company-cards');
-  const s = document.getElementById('search-input').value.toLowerCase();
-  const active = document.querySelector('.filter-chip.active');
-  const filter = active ? active.dataset.filter : 'all';
-  let companies = window.CAMPUS_DATA || [];
-  if(filter!=='all') companies = companies.filter(c => c.industry.includes(filter));
-  if(s) companies = companies.filter(c => c.name.toLowerCase().includes(s) || c.industry.toLowerCase().includes(s) || c.desc.toLowerCase().includes(s) || c.tags.some(t=>t.toLowerCase().includes(s)));
-  document.getElementById('no-results').style.display = companies.length ? 'none' : 'block';
-  grid.innerHTML = companies.map(c => {
-    const days = daysUntil(c.deadline), cls = dlClass(days), label = dlLabel(days), urgent = (days !== null && days <= URGENT_DAYS);
-    return `<div class="card${urgent?' urgent':''}">
-      ${c.source ? `<span class="source-tag">${c.source}</span>` : ''}
-      <div class="card-header"><h3>${c.name}</h3><span class="industry-tag">${c.industry}</span></div>
-      ${c.deadline ? `<div class="deadline ${cls}">📅 ${c.deadline} · ${label}</div>` : ''}
-      <div class="desc">${c.desc}</div>
-      ${c.referral ? `<div class="referral">🎫 内推码：${c.referral}</div>` : ''}
-      <div class="tags">${c.tags.map(t=>`<span class="${cls==='urgent'?'tag-red':'tag-blue'}">${t}</span>`).join('')}</div>
-      <a href="${c.url}" target="_blank" class="link">投递入口 →</a>
-    </div>`;
+// ═══════ 核心逻辑 ═══════
+var NOW=new Date(),DAY_MS=86400000,URGENT=7,WARN=21;
+function dd(d){if(!d)return null;return Math.ceil((new Date(d+'T00:00:00+08:00')-NOW)/DAY_MS)}
+function dc(d){if(d===null)return'ok';if(d<0)return'urgent';if(d<=URGENT)return'urgent';if(d<=WARN)return'warn';return'ok'}
+function dl(d){if(d===null)return'';if(d<0)return'已截止 '+Math.abs(d)+' 天';if(d===0)return'今天截止！';if(d===1)return'明天截止！';if(d<=URGENT)return'⏰ '+d+' 天后截止';if(d<=WARN)return'还有 '+d+' 天';return d+' 天后截止'}
+
+function renderCompanies(){
+  var grid=document.getElementById('company-cards'),s=document.getElementById('search-input').value.toLowerCase(),active=document.querySelector('.filter-chip.active'),filter=active?active.dataset.filter:'all',companies=CAMPUS_DATA;
+  if(filter!=='all')companies=companies.filter(function(c){return c.industry.indexOf(filter)>=0});
+  if(s)companies=companies.filter(function(c){return c.name.toLowerCase().indexOf(s)>=0||c.industry.toLowerCase().indexOf(s)>=0||c.desc.toLowerCase().indexOf(s)>=0});
+  document.getElementById('no-results').style.display=companies.length?'none':'block';
+  grid.innerHTML=companies.map(function(c){var d=dd(c.deadline),cls=dc(d),label=dl(d),urgent=(d!==null&&d<=URGENT);
+    return '<div class="card'+(urgent?' urgent':'')+'">'+(c.source?'<span class="source-tag">'+c.source+'</span>':'')+'<div class="card-header"><h3>'+c.name+'</h3><span class="industry-tag">'+c.industry+'</span></div>'+(c.deadline?'<div class="deadline '+cls+'">📅 '+c.deadline+' · '+label+'</div>':'')+'<div class="desc">'+c.desc+'</div>'+(c.referral?'<div class="referral">🎫 内推码：'+c.referral+'</div>':'')+'<div class="tags">'+c.tags.map(function(t){return '<span class="'+(cls==='urgent'?'tag-red':'tag-blue')+'">'+t+'</span>'}).join('')+'</div><a href="'+c.url+'" target="_blank" class="link">投递入口 →</a></div>';
   }).join('');
 }
 
-function renderFilters() {
-  const industries = [...new Set((window.CAMPUS_DATA||[]).map(c=>c.industry))];
-  document.getElementById('filter-chips').innerHTML = '<span class="filter-chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>' + industries.map(i=>`<span class="filter-chip" data-filter="${i}" onclick="setFilter('${i}',this)">${i}</span>`).join('');
-}
-function setFilter(f, el) { document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active')); el.classList.add('active'); renderCompanies(); }
+function renderFilters(){var industries=[];CAMPUS_DATA.forEach(function(c){if(industries.indexOf(c.industry)<0)industries.push(c.industry)});document.getElementById('filter-chips').innerHTML='<span class="filter-chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>'+industries.map(function(i){return '<span class="filter-chip" data-filter="'+i+'" onclick="setFilter(\''+i+'\',this)">'+i+'</span>'}).join('')}
+function setFilter(f,el){document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');renderCompanies()}
 
-// Countdown
-function updateCountdown() {
-  const companies = window.CAMPUS_DATA||[], upcoming = companies.filter(c=>c.deadline).map(c=>({name:c.name,days:daysUntil(c.deadline)})).filter(c=>c.days>=0).sort((a,b)=>a.days-b.days);
-  document.getElementById('company-total').textContent = companies.length;
-  const urgent = companies.filter(c=>{const d=daysUntil(c.deadline); return d!==null&&d<=URGENT_DAYS&&d>=0;});
-  document.getElementById('urgent-count').textContent = urgent.length;
-  if(upcoming.length>0) { document.getElementById('countdown-bar').style.display='inline-flex'; document.getElementById('countdown-text').textContent = `最近截止：${upcoming[0].name} — ${dlLabel(upcoming[0].days)}`; }
-}
+function updateCountdown(){document.getElementById('company-total').textContent=CAMPUS_DATA.length;var urgent=CAMPUS_DATA.filter(function(c){var d=dd(c.deadline);return d!==null&&d<=URGENT&&d>=0});document.getElementById('urgent-count').textContent=urgent.length;var up=CAMPUS_DATA.filter(function(c){return c.deadline}).map(function(c){return{name:c.name,days:dd(c.deadline)}}).filter(function(c){return c.days>=0}).sort(function(a,b){return a.days-b.days});if(up.length>0){document.getElementById('countdown-bar').style.display='inline-flex';document.getElementById('countdown-text').textContent='最近截止：'+up[0].name+' — '+dl(up[0].days)}}
 
 // Tracker
-const STORAGE_KEY='campus_tracker_2026';
-let applications = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'), currentFilter='all', currentView='table';
+var STORAGE_KEY='campus_tracker_2026',apps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),filter='all',view='table';
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(apps));document.getElementById('my-applications').textContent=apps.length;updateDashboard()}
+function ga(f){return f==='all'?apps:apps.filter(function(a){return a.status===f})}
 
-function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(applications)); document.getElementById('my-applications').textContent = applications.length; updateDashboard(); }
-function getApps(filter) { return filter==='all'?applications:applications.filter(a=>a.status===filter); }
+function renderTable(f){filter=f;var tbody=document.getElementById('tracker-body'),filtered=ga(f);
+  tbody.innerHTML=filtered.length?filtered.map(function(a){var i=apps.indexOf(a),sc='s-'+a.status.replace(/中/,'').replace(/已/,'');return '<tr><td><strong>'+a.company+'</strong></td><td>'+a.position+'</td><td>'+a.date+'</td><td><span class="status-badge '+sc+'">'+a.status+'</span></td><td style="color:var(--warm-gray-300);font-size:13px;">'+(a.note||'-')+'</td><td><button onclick="deleteApp('+i+')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:13px;">删除</button></td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--warm-gray-300);padding:32px;">暂无记录，下方添加 ✨</td></tr>';
+  renderKanban();save()}
+function renderKanban(){var filtered=ga(filter);['已投递','笔试中','面试中','Offer'].forEach(function(st){var a=filtered.filter(function(x){return x.status===st});document.getElementById('kc-'+st).textContent='('+a.length+')';document.getElementById('kan-'+st).innerHTML=a.length?a.map(function(x){var i=apps.indexOf(x);return '<div class="kanban-card"><div class="kc-company">'+x.company+'</div><div class="kc-position">'+x.position+'</div><div class="kc-date">'+x.date+'</div>'+(x.note?'<div style="font-size:12px;color:var(--warm-gray-500);margin-top:4px;">'+x.note+'</div>':'')+'<button onclick="deleteApp('+i+');renderTable(filter)" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:11px;margin-top:4px;">删除</button></div>'}).join(''):'<div style="padding:24px;text-align:center;color:var(--warm-gray-300);font-size:13px;">暂无</div>'})}
+function switchView(v){view=v;document.querySelectorAll('.view-btn').forEach(function(b){b.classList.remove('active')});event.target.classList.add('active');document.getElementById('table-view').style.display=v==='table'?'block':'none';document.getElementById('kanban-view').style.display=v==='kanban'?'grid':'none';if(v==='kanban')renderKanban()}
+function addApplication(){var c=document.getElementById('input-company').value.trim(),p=document.getElementById('input-position').value.trim(),d=document.getElementById('input-date').value,s=document.getElementById('input-status').value,n=document.getElementById('input-note').value.trim();if(!c||!p)return alert('请填写公司名和岗位');apps.push({company:c,position:p,date:d||'未填写',status:s,note:n});renderTable(filter);['input-company','input-position','input-note'].forEach(function(id){document.getElementById(id).value=''})}
+function deleteApp(i){apps.splice(i,1);renderTable(filter)}
+function filterTracker(s){document.querySelectorAll('.tracker-filters .filter-btn').forEach(function(b){b.classList.remove('active')});event.target.classList.add('active');renderTable(s)}
+function exportData(){var csv='\uFEFF公司,岗位,投递日期,状态,备注\n'+apps.map(function(a){return a.company+','+a.position+','+a.date+','+a.status+','+a.note}).join('\n');var b=new Blob([csv],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download='秋招投递记录.csv';a.click()}
+function toggleMenu(){document.getElementById('menu').classList.toggle('open')}
 
-function renderTable(filter) {
-  const tbody = document.getElementById('tracker-body'), filtered = getApps(filter);
-  currentFilter = filter;
-  tbody.innerHTML = filtered.length ? filtered.map(a => {
-    const idx = applications.indexOf(a); let sc;
-    switch(a.status) { case '已投递':sc='status-已投递';break; case '笔试中':sc='status-笔试中';break; case '面试中':sc='status-面试中';break; case 'Offer':sc='status-offer';break; default:sc='status-已拒'; }
-    return `<tr><td><strong>${a.company}</strong></td><td>${a.position}</td><td>${a.date}</td><td><span class="status-badge ${sc}">${a.status}</span></td><td style="color:var(--warm-gray-300);font-size:13px;">${a.note||'-'}</td><td><button onclick="deleteApp(${idx})" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:13px;">删除</button></td></tr>`;
-  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--warm-gray-300);padding:32px;">暂无记录，下方添加 ✨</td></tr>';
-  renderKanban(); save();
+// Dashboard
+function updateDashboard(){
+  var t=apps.length,w=apps.filter(function(a){return a.status==='笔试中'}).length,i=apps.filter(function(a){return a.status==='面试中'}).length,o=apps.filter(function(a){return a.status==='Offer'}).length,ap=t-w-i-o;
+  document.getElementById('stat-total').textContent=t;document.getElementById('stat-written').textContent=w;document.getElementById('stat-interview').textContent=i;document.getElementById('stat-offer').textContent=o;
+  var max=Math.max(ap,w,i,o,1),pw=function(v){return Math.round(v/max*100)+'%'};
+  document.getElementById('bar-applied').style.width=pw(ap);document.getElementById('bar-applied').textContent=ap;
+  document.getElementById('bar-written').style.width=pw(w);document.getElementById('bar-written').textContent=w;
+  document.getElementById('bar-interview').style.width=pw(i);document.getElementById('bar-interview').textContent=i;
+  document.getElementById('bar-offer').style.width=pw(o);document.getElementById('bar-offer').textContent=o;
 }
 
-function renderKanban() {
-  const filtered = getApps(currentFilter);
-  ['已投递','笔试中','面试中','Offer'].forEach(st => {
-    const apps = filtered.filter(a=>a.status===st);
-    document.getElementById('kanban-count-'+st).textContent = `(${apps.length})`;
-    document.getElementById('kanban-'+st).innerHTML = apps.length ? apps.map((a,i)=>{
-      const idx = applications.indexOf(a);
-      return `<div class="kanban-card"><div class="kc-company">${a.company}</div><div class="kc-position">${a.position}</div><div class="kc-date">${a.date}</div>${a.note?`<div class="kc-note">${a.note}</div>`:''}<button onclick="deleteApp(${idx});renderKanban();renderTable(currentFilter)" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:11px;margin-top:4px;">删除</button></div>`;
-    }).join('') : '<div style="padding:24px;text-align:center;color:var(--warm-gray-300);font-size:13px;">暂无</div>';
-  });
+function init(){
+  renderFilters();renderCompanies();updateCountdown();renderTable('all');save();updateDashboard();
 }
-
-function switchView(view) {
-  currentView = view;
-  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('table-view').style.display = view==='table'?'block':'none';
-  document.getElementById('kanban-view').style.display = view==='kanban'?'grid':'none';
-  if(view==='kanban') renderKanban();
-}
-
-function addApplication() {
-  const company=document.getElementById('input-company').value.trim(), position=document.getElementById('input-position').value.trim(), date=document.getElementById('input-date').value, status=document.getElementById('input-status').value, note=document.getElementById('input-note').value.trim();
-  if(!company||!position) return alert('请至少填写公司名和岗位');
-  applications.push({company,position,date:date||'未填写',status,note});
-  renderTable(currentFilter);
-  ['input-company','input-position','input-note'].forEach(id=>document.getElementById(id).value='');
-}
-function deleteApp(idx) { applications.splice(idx,1); renderTable(currentFilter); }
-function filterTracker(status) { document.querySelectorAll('.tracker-filters .filter-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); renderTable(status); }
-function exportData() { const csv='\uFEFF公司,岗位,投递日期,状态,备注\n'+applications.map(a=>`${a.company},${a.position},${a.date},${a.status},${a.note}`).join('\n'); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='秋招投递记录.csv'; a.click(); }
-function toggleMenu() { document.getElementById('menu').classList.toggle('open'); }
-
-// Dashboard charts
-let funnelChart, industryChart;
-function updateDashboard() {
-  const total = applications.length;
-  const written = applications.filter(a=>a.status==='笔试中').length;
-  const interview = applications.filter(a=>a.status==='面试中').length;
-  const offer = applications.filter(a=>a.status==='Offer').length;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-written').textContent = written;
-  document.getElementById('stat-interview').textContent = interview;
-  document.getElementById('stat-offer').textContent = offer;
-
-  if (typeof Chart === 'undefined') return;
-  try {
-  const ctx1 = document.getElementById('funnelChart');
-  if(funnelChart) funnelChart.destroy();
-  const applied = total - written - interview - offer;
-  funnelChart = new Chart(ctx1, { type:'bar', data:{ labels:['已投递','笔试中','面试中','Offer'], datasets:[{ data:[applied,written,interview,offer], backgroundColor:['#0075de','#dd5b00','#ff64c8','#1aae39'], borderRadius:4, borderSkipped:false }] }, options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{ title:{display:true,text:'📈 投递漏斗',font:{size:14,weight:'600'},color:'rgba(0,0,0,0.95)'}, legend:{display:false} }, scales:{ x:{ beginAtZero:true, ticks:{stepSize:1}, grid:{color:'rgba(0,0,0,0.05)'} }, y:{ grid:{display:false} } } });
-
-  // Industry distribution
-  const ctx2 = document.getElementById('industryChart');
-  if(industryChart) industryChart.destroy();
-  const industries = applications.reduce((acc,a)=>{
-    const company = (window.CAMPUS_DATA||[]).find(c=>c.name===a.company);
-    const ind = company ? company.industry : '其他';
-    acc[ind] = (acc[ind]||0)+1; return acc;
-  }, {});
-  const colors = ['#0075de','#2a9d99','#dd5b00','#ff64c8','#1aae39','#7c3aed','#f59e0b','#3b82f6','#10b981','#f43f5e'];
-  industryChart = new Chart(ctx2, { type:'doughnut', data:{ labels:Object.keys(industries), datasets:[{ data:Object.values(industries), backgroundColor:colors.slice(0,Object.keys(industries).length), borderColor:'white', borderWidth:2 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ title:{display:true,text:'🎯 投递行业分布',font:{size:14,weight:'600'},color:'rgba(0,0,0,0.95)'}, legend:{position:'bottom',labels:{padding:12,usePointStyle:true,pointStyleWidth:8}} } });
-  } catch(e) { console.warn('Chart init failed:', e.message); }
-}
-
-function init() {
-  renderFilters(); renderCompanies(); updateCountdown(); renderTable('all'); save();
-  document.getElementById('update-time').textContent = '数据更新：2026-05-30';
-  if(applications.length===0) updateDashboard();
-}
-if(window.CAMPUS_DATA) init(); else window.addEventListener('load', init);
+init();
 </script>
 </body>
 </html>
