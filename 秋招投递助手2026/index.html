@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026秋招投递助手 · 提前批+正式批一站追踪</title>
+<title>2026秋招投递助手 · 多用户版</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
 :root {
   --white: #ffffff; --warm-white: #f6f5f4; --warm-dark: #31302e;
@@ -13,37 +14,52 @@
   --green: #1aae39; --orange: #dd5b00; --pink: #ff64c8; --teal: #2a9d99; --red: #e03e3e;
   --red-bg: #fff5f5; --border: 1px solid rgba(0,0,0,0.1);
   --card-shadow: rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.84688px, rgba(0,0,0,0.02) 0px 0.8px 2.925px, rgba(0,0,0,0.01) 0px 0.175px 1.04062px;
-  --deep-shadow: rgba(0,0,0,0.01) 0px 1px 3px, rgba(0,0,0,0.02) 0px 3px 7px, rgba(0,0,0,0.02) 0px 7px 15px, rgba(0,0,0,0.04) 0px 14px 28px, rgba(0,0,0,0.05) 0px 23px 52px;
   --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 9999px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--near-black); background: var(--white); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.hidden { display: none !important; }
+
+/* Auth */
+.auth-container { max-width: 420px; margin: 60px auto; padding: 0 24px; }
+.auth-card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--card-shadow); text-align: center; }
+.auth-card h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.auth-card p { font-size: 15px; color: var(--warm-gray-500); margin-bottom: 24px; }
+.auth-tabs { display: flex; gap: 4px; margin-bottom: 24px; }
+.auth-tab { flex: 1; padding: 10px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); font-size: 15px; font-weight: 600; cursor: pointer; }
+.auth-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
+.auth-form { display: flex; flex-direction: column; gap: 12px; }
+.auth-form input { padding: 10px 14px; border: var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; }
+.auth-form input:focus { outline: 2px solid var(--blue); }
+.auth-form button { padding: 12px; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; }
+.auth-form button:hover { background: var(--blue-active); }
+.auth-error { color: var(--red); font-size: 14px; margin-top: 8px; }
+.auth-success { color: var(--green); font-size: 14px; margin-top: 8px; }
+
+/* Nav */
 nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: var(--border); padding: 0 24px; }
 .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .nav-brand { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .nav-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.nav-links { display: flex; gap: 24px; list-style: none; }
+.nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
 .nav-links a { font-size: 15px; font-weight: 500; color: var(--warm-gray-500); text-decoration: none; }
+.nav-user { font-size: 13px; color: var(--warm-gray-300); margin-right: 8px; }
 .nav-cta { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; }
 .nav-cta:active { transform: scale(0.95); }
+.nav-cta.outline { background: transparent; color: var(--warm-gray-500); border: var(--border); }
 .menu-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; }
-.section { padding: 64px 24px; }
-.section.warm { background: var(--warm-white); }
-.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section { padding: 64px 24px; } .section.warm { background: var(--warm-white); } .section-inner { max-width: 1200px; margin: 0 auto; }
 .hero { padding: 80px 24px 64px; text-align: center; }
 .hero-badge { display: inline-block; background: var(--blue-bg); color: var(--blue-text); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 24px; }
 .hero h1 { font-size: clamp(32px, 5vw, 64px); font-weight: 700; line-height: 1.04; margin-bottom: 16px; }
 .hero p { font-size: 20px; color: var(--warm-gray-500); max-width: 640px; margin: 0 auto 32px; }
 .hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.hero-stat { text-align: center; }
-.hero-stat .num { font-size: 40px; font-weight: 700; }
-.hero-stat .num.red { color: var(--red); }
-.hero-stat .label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
+.hero-stat { text-align: center; } .hero-stat .num { font-size: 40px; font-weight: 700; } .hero-stat .num.red { color: var(--red); } .hero-stat .label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
 .countdown-bar { display: inline-flex; align-items: center; gap: 8px; background: var(--red-bg); border: 1px solid rgba(224,62,62,0.2); border-radius: var(--radius-pill); padding: 8px 16px; margin-top: 24px; }
 .countdown-bar .text { font-size: 14px; font-weight: 600; color: var(--red); }
 
-/* Timeline */
 .timeline-track { position: relative; padding: 32px 0; }
 .timeline-line { position: absolute; top: 56px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08); }
 .timeline-items { display: flex; justify-content: space-between; position: relative; z-index: 1; }
@@ -57,25 +73,17 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92)
 .section-title { font-size: clamp(24px, 3vw, 40px); font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
 .section-subtitle { font-size: 16px; color: var(--warm-gray-500); margin-bottom: 32px; }
 
-/* Dashboard */
 .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
 .stat-card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); text-align: center; }
-.stat-card .stat-num { font-size: 36px; font-weight: 700; }
-.stat-card .stat-label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
-.stat-card.b .stat-num { color: var(--blue); }
-.stat-card.o .stat-num { color: var(--orange); }
-.stat-card.p .stat-num { color: var(--pink); }
-.stat-card.g .stat-num { color: var(--green); }
-/* Bar chart */
+.stat-card .stat-num { font-size: 36px; font-weight: 700; } .stat-card .stat-label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
+.stat-card.b .stat-num { color: var(--blue); } .stat-card.o .stat-num { color: var(--orange); } .stat-card.p .stat-num { color: var(--pink); } .stat-card.g .stat-num { color: var(--green); }
 .bar-chart { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); }
 .bar-chart h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
 .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .bar-label { width: 60px; font-size: 13px; font-weight: 600; text-align: right; color: var(--warm-gray-500); }
 .bar-track { flex: 1; height: 28px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; color: white; }
-.bar-count { width: 40px; font-size: 14px; font-weight: 700; color: var(--near-black); }
 
-/* Search */
 .search-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
 .search-input { flex: 1; min-width: 200px; padding: 10px 16px; border: var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; background: var(--white); }
 .search-input:focus { outline: 2px solid var(--blue); }
@@ -90,19 +98,15 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92)
 .card h3 { font-size: 18px; font-weight: 700; }
 .card .industry-tag { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); background: #f0f0f0; color: var(--warm-gray-500); white-space: nowrap; }
 .card .deadline { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-.card .deadline.ok { color: var(--warm-gray-500); }
-.card .deadline.warn { color: var(--orange); }
-.card .deadline.urgent { color: var(--red); }
+.card .deadline.ok { color: var(--warm-gray-500); } .card .deadline.warn { color: var(--orange); } .card .deadline.urgent { color: var(--red); }
 .card .desc { font-size: 15px; color: var(--warm-gray-500); margin-bottom: 8px; }
 .card .referral { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 8px; }
 .card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .card .tags span { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); }
-.tag-blue { background: var(--blue-bg); color: var(--blue-text); }
-.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-blue { background: var(--blue-bg); color: var(--blue-text); } .tag-red { background: var(--red-bg); color: var(--red); }
 .card .link { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; }
 .card .source-tag { position: absolute; top: 12px; right: 12px; font-size: 10px; color: var(--warm-gray-300); }
 
-/* Tracker */
 .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
 .view-toggle { display: flex; gap: 4px; }
 .view-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); color: var(--warm-gray-500); cursor: pointer; }
@@ -113,23 +117,15 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92)
 .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: var(--border); }
 table { width: 100%; border-collapse: collapse; min-width: 700px; background: var(--white); }
 th { text-align: left; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--warm-gray-300); border-bottom: var(--border); }
-td { padding: 12px 16px; font-size: 14px; border-bottom: var(--border); }
-tr:last-child td { border-bottom: none; }
+td { padding: 12px 16px; font-size: 14px; border-bottom: var(--border); } tr:last-child td { border-bottom: none; }
 .status-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); }
-.s-已投递 { background: var(--blue-bg); color: var(--blue-text); }
-.s-笔试中 { background: #fff6ed; color: #dd5b00; }
-.s-面试中 { background: #fff0f8; color: #ff64c8; }
-.s-Offer { background: #edf8f0; color: #1aae39; }
-.s-已拒 { background: #f5f0f0; color: #b33a3a; }
+.s-已投递 { background: var(--blue-bg); color: var(--blue-text); } .s-笔试中 { background: #fff6ed; color: #dd5b00; } .s-面试中 { background: #fff0f8; color: #ff64c8; } .s-Offer { background: #edf8f0; color: #1aae39; } .s-已拒 { background: #f5f0f0; color: #b33a3a; }
 
-/* Kanban */
 .kanban-board { display: none; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 .kanban-col { background: var(--warm-white); border-radius: var(--radius-lg); padding: 12px; min-height: 150px; }
 .kanban-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--warm-gray-500); }
 .kanban-card { background: var(--white); border: var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; box-shadow: var(--card-shadow); }
-.kanban-card .kc-company { font-size: 15px; font-weight: 700; }
-.kanban-card .kc-position { font-size: 13px; color: var(--warm-gray-500); margin: 2px 0; }
-.kanban-card .kc-date { font-size: 12px; color: var(--warm-gray-300); }
+.kanban-card .kc-company { font-size: 15px; font-weight: 700; } .kanban-card .kc-position { font-size: 13px; color: var(--warm-gray-500); margin: 2px 0; } .kanban-card .kc-date { font-size: 12px; color: var(--warm-gray-300); }
 
 .add-row-form { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 .add-row-form input, .add-row-form select { padding: 8px 12px; border: var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--white); }
@@ -138,45 +134,56 @@ tr:last-child td { border-bottom: none; }
 
 .resource-list { display: flex; flex-direction: column; gap: 12px; }
 .resource-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border: var(--border); border-radius: var(--radius-md); box-shadow: var(--card-shadow); gap: 16px; }
-.resource-item .r-info { flex: 1; }
-.resource-item .r-title { font-size: 16px; font-weight: 600; }
-.resource-item .r-desc { font-size: 14px; color: var(--warm-gray-500); margin-top: 2px; }
-.resource-item .r-link { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; white-space: nowrap; }
+.resource-item .r-info { flex: 1; } .resource-item .r-title { font-size: 16px; font-weight: 600; } .resource-item .r-desc { font-size: 14px; color: var(--warm-gray-500); margin-top: 2px; } .resource-item .r-link { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; white-space: nowrap; }
 
-footer { padding: 32px 24px; border-top: var(--border); text-align: center; font-size: 14px; color: var(--warm-gray-300); }
-footer a { color: var(--blue); }
+footer { padding: 32px 24px; border-top: var(--border); text-align: center; font-size: 14px; color: var(--warm-gray-300); } footer a { color: var(--blue); }
 .no-results { text-align: center; padding: 48px; color: var(--warm-gray-300); display: none; }
 
 @media (max-width: 768px) {
   .nav-links { display: none; } .menu-btn { display: block; }
   .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--white); border-bottom: var(--border); padding: 16px 24px; gap: 12px; }
   .hero { padding: 56px 16px 40px; } .hero h1 { font-size: 32px; } .hero p { font-size: 16px; }
-  .hero-stats { gap: 24px; } .hero-stat .num { font-size: 28px; }
-  .section { padding: 40px 16px; } .section-title { font-size: 24px; }
-  .card-grid { grid-template-columns: 1fr; }
-  .dashboard-grid { grid-template-columns: 1fr 1fr; }
+  .hero-stats { gap: 24px; } .hero-stat .num { font-size: 28px; } .section { padding: 40px 16px; } .section-title { font-size: 24px; }
+  .card-grid { grid-template-columns: 1fr; } .dashboard-grid { grid-template-columns: 1fr 1fr; }
   .search-bar { flex-direction: column; }
-  .timeline-track { padding: 0; }
-  .timeline-line { top: 0; bottom: 0; left: 15px; right: auto; width: 2px; height: auto; }
+  .timeline-track { padding: 0; } .timeline-line { top: 0; bottom: 0; left: 15px; right: auto; width: 2px; height: auto; }
   .timeline-items { flex-direction: column; gap: 24px; padding-left: 40px; }
-  .timeline-item { text-align: left; display: flex; align-items: center; gap: 12px; }
-  .timeline-dot { position: absolute; left: -32px; top: 4px; margin: 0; }
-  .kanban-board { grid-template-columns: 1fr; }
-  .resource-item { flex-direction: column; align-items: flex-start; }
+  .timeline-item { text-align: left; display: flex; align-items: center; gap: 12px; } .timeline-dot { position: absolute; left: -32px; top: 4px; margin: 0; }
+  .kanban-board { grid-template-columns: 1fr; } .resource-item { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 480px) { .hero-stats { flex-direction: column; gap: 16px; } .dashboard-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
+<!-- ═══ 登录/注册 ═══ -->
+<div id="authSection" class="auth-container">
+  <div class="auth-card">
+    <h1>秋招助手 2026</h1>
+    <p>登录后记录你的投递，数据云端同步</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup')">注册</button>
+    </div>
+    <div class="auth-form" id="authForm">
+      <input type="email" id="authEmail" placeholder="邮箱地址" autocomplete="email">
+      <input type="password" id="authPassword" placeholder="密码（至少6位）" autocomplete="current-password">
+      <button onclick="handleAuth()" id="authBtn">登录</button>
+      <div id="authMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 主应用 ═══ -->
+<div id="appSection" class="hidden">
 <nav>
   <div class="nav-inner">
     <div class="nav-brand"><span class="dot"></span>秋招助手 2026</div>
     <button class="menu-btn" onclick="toggleMenu()">☰</button>
     <ul class="nav-links" id="menu">
       <li><a href="#dashboard">总览</a></li><li><a href="#timeline">时间线</a></li><li><a href="#companies">公司汇总</a></li><li><a href="#tracker">投递追踪</a></li><li><a href="#resources">资料区</a></li>
+      <li><span class="nav-user" id="navUser"></span><button class="nav-cta outline" onclick="signOut()" style="font-size:13px;padding:6px 10px;">退出</button></li>
     </ul>
-    <button class="nav-cta" onclick="document.querySelector('#tracker').scrollIntoView({behavior:'smooth'})">开始投递</button>
   </div>
 </nav>
 
@@ -235,7 +242,7 @@ footer a { color: var(--blue); }
     <h2 class="section-title">公司网申入口</h2>
     <p class="section-subtitle">搜索筛选，一键跳转，截止日期实时追踪</p>
     <div class="search-bar">
-      <input type="text" class="search-input" id="search-input" placeholder="🔍 搜索公司名、行业、岗位关键词…" oninput="renderCompanies()">
+      <input type="text" class="search-input" id="search-input" placeholder="🔍 搜索公司名、行业…" oninput="renderCompanies()">
       <div class="filter-chips" id="filter-chips"></div>
     </div>
     <div class="card-grid" id="company-cards"></div>
@@ -246,7 +253,7 @@ footer a { color: var(--blue); }
 <section class="section" id="tracker">
   <div class="section-inner">
     <h2 class="section-title">投递追踪</h2>
-    <p class="section-subtitle">记录每一步，数据存本地浏览器</p>
+    <p class="section-subtitle">记录每一步，数据云端同步，换设备不丢失</p>
     <div class="tracker-header">
       <div class="view-toggle">
         <button class="view-btn active" onclick="switchView('table')">📋 表格</button>
@@ -274,7 +281,7 @@ footer a { color: var(--blue); }
       <input type="date" id="input-date">
       <select id="input-status"><option>已投递</option><option>笔试中</option><option>面试中</option><option>Offer</option><option>已拒</option></select>
       <input type="text" id="input-note" placeholder="备注" style="width:120px">
-      <button onclick="addApplication()">+ 添加</button>
+      <button onclick="addApp()">+ 添加</button>
     </div>
   </div>
 </section>
@@ -294,12 +301,18 @@ footer a { color: var(--blue); }
 </section>
 
 <footer>
-  秋招投递助手 2026 · 数据定期更新 · 投递记录存于本地<br>
+  秋招投递助手 2026 · 多用户版 · 数据云端同步<br>
   <a href="https://campus2026.top" target="_blank">校招汇总参考</a> · 最后更新 2026-05-30
 </footer>
+</div><!-- #appSection -->
 
 <script>
-// ═══════ 公司数据（内嵌，零外部依赖）═══════
+// ═══ Supabase 配置（替换为你的项目信息） ═══
+var SUPABASE_URL = 'YOUR_SUPABASE_URL';
+var SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ═══ 公司数据 ═══
 var CAMPUS_DATA = [
   {name:"字节跳动", industry:"互联网", tags:["研发+23%","5000+Offer"], url:"https://jobs.bytedance.com/campus", desc:"8月4日开启，研发岗需求暴增", deadline:"2026-09-15", source:"官网", referral:""},
   {name:"阿里巴巴", industry:"互联网", tags:["7000+Offer","AI岗>60%"], url:"https://campus.alibaba.com", desc:"8月5日启动，15个业务集团齐招", deadline:"2026-09-20", source:"官网", referral:""},
@@ -329,58 +342,126 @@ var CAMPUS_DATA = [
   {name:"知乎", industry:"互联网", tags:["北京"], url:"https://app.mokahr.com/campus_apply/zhihu/3818/", desc:"内容平台校招", deadline:"2026-09-30", source:"官网", referral:""}
 ];
 
-// ═══════ 核心逻辑 ═══════
-var NOW=new Date(),DAY_MS=86400000,URGENT=7,WARN=21;
-function dd(d){if(!d)return null;return Math.ceil((new Date(d+'T00:00:00+08:00')-NOW)/DAY_MS)}
-function dc(d){if(d===null)return'ok';if(d<0)return'urgent';if(d<=URGENT)return'urgent';if(d<=WARN)return'warn';return'ok'}
-function dl(d){if(d===null)return'';if(d<0)return'已截止 '+Math.abs(d)+' 天';if(d===0)return'今天截止！';if(d===1)return'明天截止！';if(d<=URGENT)return'⏰ '+d+' 天后截止';if(d<=WARN)return'还有 '+d+' 天';return d+' 天后截止'}
+// ═══ Auth ═══
+var authMode = 'login';
+function switchAuthTab(mode) {
+  authMode = mode;
+  document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.toggle('active', t.textContent === (mode==='login'?'登录':'注册')); });
+  document.getElementById('authBtn').textContent = mode==='login'?'登录':'注册';
+  document.getElementById('authMsg').innerHTML = '';
+}
+function handleAuth() {
+  var email = document.getElementById('authEmail').value.trim();
+  var password = document.getElementById('authPassword').value;
+  if (!email || !password) { document.getElementById('authMsg').innerHTML = '<div class="auth-error">请填写邮箱和密码</div>'; return; }
+  if (password.length < 6) { document.getElementById('authMsg').innerHTML = '<div class="auth-error">密码至少6位</div>'; return; }
+  document.getElementById('authBtn').textContent = '处理中…';
+  document.getElementById('authBtn').disabled = true;
+  
+  var promise = authMode === 'login' ? sb.auth.signInWithPassword({email: email, password: password}) : sb.auth.signUp({email: email, password: password});
+  promise.then(function(r) {
+    if (r.error) {
+      var msg = r.error.message;
+      if (msg.includes('Invalid login')) msg = '邮箱或密码错误';
+      else if (msg.includes('already registered')) msg = '该邮箱已注册，请直接登录';
+      document.getElementById('authMsg').innerHTML = '<div class="auth-error">'+msg+'</div>';
+      document.getElementById('authBtn').textContent = authMode==='login'?'登录':'注册';
+      document.getElementById('authBtn').disabled = false;
+    } else if (authMode === 'signup' && r.data.user) {
+      document.getElementById('authMsg').innerHTML = '<div class="auth-success">注册成功，请查收验证邮件后登录</div>';
+      document.getElementById('authBtn').textContent = '注册';
+      document.getElementById('authBtn').disabled = false;
+    }
+  }).catch(function(e) {
+    document.getElementById('authMsg').innerHTML = '<div class="auth-error">网络错误，请重试</div>';
+    document.getElementById('authBtn').textContent = authMode==='login'?'登录':'注册';
+    document.getElementById('authBtn').disabled = false;
+  });
+}
+function signOut() { sb.auth.signOut(); }
 
-function renderCompanies(){
-  var grid=document.getElementById('company-cards'),s=document.getElementById('search-input').value.toLowerCase(),active=document.querySelector('.filter-chip.active'),filter=active?active.dataset.filter:'all',companies=CAMPUS_DATA;
-  if(filter!=='all')companies=companies.filter(function(c){return c.industry.indexOf(filter)>=0});
-  if(s)companies=companies.filter(function(c){return c.name.toLowerCase().indexOf(s)>=0||c.industry.toLowerCase().indexOf(s)>=0||c.desc.toLowerCase().indexOf(s)>=0});
-  document.getElementById('no-results').style.display=companies.length?'none':'block';
-  grid.innerHTML=companies.map(function(c){var d=dd(c.deadline),cls=dc(d),label=dl(d),urgent=(d!==null&&d<=URGENT);
-    return '<div class="card'+(urgent?' urgent':'')+'">'+(c.source?'<span class="source-tag">'+c.source+'</span>':'')+'<div class="card-header"><h3>'+c.name+'</h3><span class="industry-tag">'+c.industry+'</span></div>'+(c.deadline?'<div class="deadline '+cls+'">📅 '+c.deadline+' · '+label+'</div>':'')+'<div class="desc">'+c.desc+'</div>'+(c.referral?'<div class="referral">🎫 内推码：'+c.referral+'</div>':'')+'<div class="tags">'+c.tags.map(function(t){return '<span class="'+(cls==='urgent'?'tag-red':'tag-blue')+'">'+t+'</span>'}).join('')+'</div><a href="'+c.url+'" target="_blank" class="link">投递入口 →</a></div>';
+// ═══ 工具函数 ═══
+var NOW = new Date(), DAY_MS = 86400000, URGENT = 7, WARN = 21;
+function dd(d) { if (!d) return null; return Math.ceil((new Date(d+'T00:00:00+08:00') - NOW) / DAY_MS); }
+function dc(d) { if (d === null) return 'ok'; if (d <= URGENT) return d < 0 ? 'urgent' : 'urgent'; if (d <= WARN) return 'warn'; return 'ok'; }
+function dl(d) { if (d === null) return ''; if (d < 0) return '已截止 ' + Math.abs(d) + ' 天'; if (d === 0) return '今天截止！'; if (d === 1) return '明天截止！'; if (d <= URGENT) return '⏰ ' + d + ' 天后截止'; if (d <= WARN) return '还有 ' + d + ' 天'; return d + ' 天后截止'; }
+
+// ═══ 公司渲染 ═══
+function renderCompanies() {
+  var grid = document.getElementById('company-cards'), s = document.getElementById('search-input').value.toLowerCase(), active = document.querySelector('.filter-chip.active'), filter = active ? active.dataset.filter : 'all', companies = CAMPUS_DATA;
+  if (filter !== 'all') companies = companies.filter(function(c) { return c.industry.indexOf(filter) >= 0; });
+  if (s) companies = companies.filter(function(c) { return c.name.toLowerCase().indexOf(s) >= 0 || c.industry.toLowerCase().indexOf(s) >= 0 || c.desc.toLowerCase().indexOf(s) >= 0; });
+  document.getElementById('no-results').style.display = companies.length ? 'none' : 'block';
+  grid.innerHTML = companies.map(function(c) {
+    var d = dd(c.deadline), cls = dc(d), label = dl(d), urgent = (d !== null && d <= URGENT && d >= 0);
+    return '<div class="card' + (urgent ? ' urgent' : '') + '">' + (c.source ? '<span class="source-tag">' + c.source + '</span>' : '') + '<div class="card-header"><h3>' + c.name + '</h3><span class="industry-tag">' + c.industry + '</span></div>' + (c.deadline ? '<div class="deadline ' + cls + '">📅 ' + c.deadline + ' · ' + label + '</div>' : '') + '<div class="desc">' + c.desc + '</div>' + (c.referral ? '<div class="referral">🎫 内推码：' + c.referral + '</div>' : '') + '<div class="tags">' + c.tags.map(function(t) { return '<span class="' + (cls === 'urgent' ? 'tag-red' : 'tag-blue') + '">' + t + '</span>'; }).join('') + '</div><a href="' + c.url + '" target="_blank" class="link">投递入口 →</a></div>';
   }).join('');
 }
+function renderFilters() { var industries = []; CAMPUS_DATA.forEach(function(c) { if (industries.indexOf(c.industry) < 0) industries.push(c.industry); }); document.getElementById('filter-chips').innerHTML = '<span class="filter-chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>' + industries.map(function(i) { return '<span class="filter-chip" data-filter="' + i + '" onclick="setFilter(\'' + i + '\',this)">' + i + '</span>'; }).join(''); }
+function setFilter(f, el) { document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); }); el.classList.add('active'); renderCompanies(); }
+function updateCountdown() { document.getElementById('company-total').textContent = CAMPUS_DATA.length; var urgent = CAMPUS_DATA.filter(function(c) { var d = dd(c.deadline); return d !== null && d <= URGENT && d >= 0; }); document.getElementById('urgent-count').textContent = urgent.length; var up = CAMPUS_DATA.filter(function(c) { return c.deadline; }).map(function(c) { return { name: c.name, days: dd(c.deadline) }; }).filter(function(c) { return c.days >= 0; }).sort(function(a, b) { return a.days - b.days; }); if (up.length > 0) { document.getElementById('countdown-bar').style.display = 'inline-flex'; document.getElementById('countdown-text').textContent = '最近截止：' + up[0].name + ' — ' + dl(up[0].days); } }
 
-function renderFilters(){var industries=[];CAMPUS_DATA.forEach(function(c){if(industries.indexOf(c.industry)<0)industries.push(c.industry)});document.getElementById('filter-chips').innerHTML='<span class="filter-chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>'+industries.map(function(i){return '<span class="filter-chip" data-filter="'+i+'" onclick="setFilter(\''+i+'\',this)">'+i+'</span>'}).join('')}
-function setFilter(f,el){document.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});el.classList.add('active');renderCompanies()}
+// ═══ Supabase CRUD ═══
+var apps = [], filter = 'all', view = 'table';
 
-function updateCountdown(){document.getElementById('company-total').textContent=CAMPUS_DATA.length;var urgent=CAMPUS_DATA.filter(function(c){var d=dd(c.deadline);return d!==null&&d<=URGENT&&d>=0});document.getElementById('urgent-count').textContent=urgent.length;var up=CAMPUS_DATA.filter(function(c){return c.deadline}).map(function(c){return{name:c.name,days:dd(c.deadline)}}).filter(function(c){return c.days>=0}).sort(function(a,b){return a.days-b.days});if(up.length>0){document.getElementById('countdown-bar').style.display='inline-flex';document.getElementById('countdown-text').textContent='最近截止：'+up[0].name+' — '+dl(up[0].days)}}
-
-// Tracker
-var STORAGE_KEY='campus_tracker_2026',apps=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'),filter='all',view='table';
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(apps));document.getElementById('my-applications').textContent=apps.length;updateDashboard()}
-function ga(f){return f==='all'?apps:apps.filter(function(a){return a.status===f})}
-
-function renderTable(f){filter=f;var tbody=document.getElementById('tracker-body'),filtered=ga(f);
-  tbody.innerHTML=filtered.length?filtered.map(function(a){var i=apps.indexOf(a),sc='s-'+a.status.replace(/中/,'').replace(/已/,'');return '<tr><td><strong>'+a.company+'</strong></td><td>'+a.position+'</td><td>'+a.date+'</td><td><span class="status-badge '+sc+'">'+a.status+'</span></td><td style="color:var(--warm-gray-300);font-size:13px;">'+(a.note||'-')+'</td><td><button onclick="deleteApp('+i+')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:13px;">删除</button></td></tr>'}).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--warm-gray-300);padding:32px;">暂无记录，下方添加 ✨</td></tr>';
-  renderKanban();save()}
-function renderKanban(){var filtered=ga(filter);['已投递','笔试中','面试中','Offer'].forEach(function(st){var a=filtered.filter(function(x){return x.status===st});document.getElementById('kc-'+st).textContent='('+a.length+')';document.getElementById('kan-'+st).innerHTML=a.length?a.map(function(x){var i=apps.indexOf(x);return '<div class="kanban-card"><div class="kc-company">'+x.company+'</div><div class="kc-position">'+x.position+'</div><div class="kc-date">'+x.date+'</div>'+(x.note?'<div style="font-size:12px;color:var(--warm-gray-500);margin-top:4px;">'+x.note+'</div>':'')+'<button onclick="deleteApp('+i+');renderTable(filter)" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:11px;margin-top:4px;">删除</button></div>'}).join(''):'<div style="padding:24px;text-align:center;color:var(--warm-gray-300);font-size:13px;">暂无</div>'})}
-function switchView(v){view=v;document.querySelectorAll('.view-btn').forEach(function(b){b.classList.remove('active')});event.target.classList.add('active');document.getElementById('table-view').style.display=v==='table'?'block':'none';document.getElementById('kanban-view').style.display=v==='kanban'?'grid':'none';if(v==='kanban')renderKanban()}
-function addApplication(){var c=document.getElementById('input-company').value.trim(),p=document.getElementById('input-position').value.trim(),d=document.getElementById('input-date').value,s=document.getElementById('input-status').value,n=document.getElementById('input-note').value.trim();if(!c||!p)return alert('请填写公司名和岗位');apps.push({company:c,position:p,date:d||'未填写',status:s,note:n});renderTable(filter);['input-company','input-position','input-note'].forEach(function(id){document.getElementById(id).value=''})}
-function deleteApp(i){apps.splice(i,1);renderTable(filter)}
-function filterTracker(s){document.querySelectorAll('.tracker-filters .filter-btn').forEach(function(b){b.classList.remove('active')});event.target.classList.add('active');renderTable(s)}
-function exportData(){var csv='\uFEFF公司,岗位,投递日期,状态,备注\n'+apps.map(function(a){return a.company+','+a.position+','+a.date+','+a.status+','+a.note}).join('\n');var b=new Blob([csv],{type:'text/csv;charset=utf-8'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download='秋招投递记录.csv';a.click()}
-function toggleMenu(){document.getElementById('menu').classList.toggle('open')}
-
-// Dashboard
-function updateDashboard(){
-  var t=apps.length,w=apps.filter(function(a){return a.status==='笔试中'}).length,i=apps.filter(function(a){return a.status==='面试中'}).length,o=apps.filter(function(a){return a.status==='Offer'}).length,ap=t-w-i-o;
-  document.getElementById('stat-total').textContent=t;document.getElementById('stat-written').textContent=w;document.getElementById('stat-interview').textContent=i;document.getElementById('stat-offer').textContent=o;
-  var max=Math.max(ap,w,i,o,1),pw=function(v){return Math.round(v/max*100)+'%'};
-  document.getElementById('bar-applied').style.width=pw(ap);document.getElementById('bar-applied').textContent=ap;
-  document.getElementById('bar-written').style.width=pw(w);document.getElementById('bar-written').textContent=w;
-  document.getElementById('bar-interview').style.width=pw(i);document.getElementById('bar-interview').textContent=i;
-  document.getElementById('bar-offer').style.width=pw(o);document.getElementById('bar-offer').textContent=o;
+function loadApps() {
+  return sb.from('applications').select('*').order('created_at', { ascending: false }).then(function(r) {
+    apps = r.data || [];
+    renderTable(filter);
+    updateDashboard();
+  });
+}
+function addApp() {
+  var c = document.getElementById('input-company').value.trim(), p = document.getElementById('input-position').value.trim(), d = document.getElementById('input-date').value, s = document.getElementById('input-status').value, n = document.getElementById('input-note').value.trim();
+  if (!c || !p) return alert('请填写公司名和岗位');
+  sb.from('applications').insert([{ company: c, position: p, date: d || '未填写', status: s, note: n }]).then(function() {
+    loadApps();
+    ['input-company', 'input-position', 'input-note'].forEach(function(id) { document.getElementById(id).value = ''; });
+  });
+}
+function deleteApp(id) {
+  sb.from('applications').delete().eq('id', id).then(function() { loadApps(); });
+}
+function renderTable(f) { filter = f;
+  var tbody = document.getElementById('tracker-body'), filtered = f === 'all' ? apps : apps.filter(function(a) { return a.status === f; });
+  tbody.innerHTML = filtered.length ? filtered.map(function(a) { var sc = 's-' + a.status.replace(/中/, '').replace(/已/, ''); return '<tr><td><strong>' + a.company + '</strong></td><td>' + a.position + '</td><td>' + a.date + '</td><td><span class="status-badge ' + sc + '">' + a.status + '</span></td><td style="color:var(--warm-gray-300);font-size:13px;">' + (a.note || '-') + '</td><td><button onclick="deleteApp(' + a.id + ')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:13px;">删除</button></td></tr>'; }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--warm-gray-300);padding:32px;">暂无记录，下方添加 ✨</td></tr>';
+  renderKanban();
+}
+function renderKanban() { var filtered = filter === 'all' ? apps : apps.filter(function(a) { return a.status === filter; }); ['已投递', '笔试中', '面试中', 'Offer'].forEach(function(st) { var a = filtered.filter(function(x) { return x.status === st; }); document.getElementById('kc-' + st).textContent = '(' + a.length + ')'; document.getElementById('kan-' + st).innerHTML = a.length ? a.map(function(x) { return '<div class="kanban-card"><div class="kc-company">' + x.company + '</div><div class="kc-position">' + x.position + '</div><div class="kc-date">' + x.date + '</div>' + (x.note ? '<div style="font-size:12px;color:var(--warm-gray-500);margin-top:4px;">' + x.note + '</div>' : '') + '<button onclick="deleteApp(' + x.id + ')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:11px;margin-top:4px;">删除</button></div>'; }).join('') : '<div style="padding:24px;text-align:center;color:var(--warm-gray-300);font-size:13px;">暂无</div>'; }); }
+function switchView(v) { view = v; document.querySelectorAll('.view-btn').forEach(function(b) { b.classList.remove('active'); }); event.target.classList.add('active'); document.getElementById('table-view').style.display = v === 'table' ? 'block' : 'none'; document.getElementById('kanban-view').style.display = v === 'kanban' ? 'grid' : 'none'; if (v === 'kanban') renderKanban(); }
+function filterTracker(s) { document.querySelectorAll('.tracker-filters .filter-btn').forEach(function(b) { b.classList.remove('active'); }); event.target.classList.add('active'); renderTable(s); }
+function exportData() { var csv = '\uFEFF公司,岗位,投递日期,状态,备注\n' + apps.map(function(a) { return a.company + ',' + a.position + ',' + a.date + ',' + a.status + ',' + a.note; }).join('\n'); var b = new Blob([csv], { type: 'text/csv;charset=utf-8' }); var u = URL.createObjectURL(b); var a = document.createElement('a'); a.href = u; a.download = '秋招投递记录.csv'; a.click(); }
+function toggleMenu() { document.getElementById('menu').classList.toggle('open'); }
+function updateDashboard() {
+  var t = apps.length, w = apps.filter(function(a) { return a.status === '笔试中'; }).length, i = apps.filter(function(a) { return a.status === '面试中'; }).length, o = apps.filter(function(a) { return a.status === 'Offer'; }).length, ap = t - w - i - o;
+  document.getElementById('stat-total').textContent = t; document.getElementById('stat-written').textContent = w; document.getElementById('stat-interview').textContent = i; document.getElementById('stat-offer').textContent = o;
+  document.getElementById('my-applications').textContent = t;
+  var max = Math.max(ap, w, i, o, 1), pw = function(v) { return Math.round(v / max * 100) + '%'; };
+  document.getElementById('bar-applied').style.width = pw(ap); document.getElementById('bar-applied').textContent = ap;
+  document.getElementById('bar-written').style.width = pw(w); document.getElementById('bar-written').textContent = w;
+  document.getElementById('bar-interview').style.width = pw(i); document.getElementById('bar-interview').textContent = i;
+  document.getElementById('bar-offer').style.width = pw(o); document.getElementById('bar-offer').textContent = o;
 }
 
-function init(){
-  renderFilters();renderCompanies();updateCountdown();renderTable('all');save();updateDashboard();
-}
-init();
+// ═══ Init ═══
+sb.auth.onAuthStateChange(function(event, session) {
+  if (session) {
+    document.getElementById('authSection').classList.add('hidden');
+    document.getElementById('appSection').classList.remove('hidden');
+    document.getElementById('navUser').textContent = session.user.email;
+    renderFilters(); renderCompanies(); updateCountdown(); loadApps();
+  } else {
+    document.getElementById('authSection').classList.remove('hidden');
+    document.getElementById('appSection').classList.add('hidden');
+  }
+});
+
+// 启动时检查已存在session
+sb.auth.getSession().then(function(r) {
+  if (!r.data.session) {
+    document.getElementById('authSection').classList.remove('hidden');
+  }
+});
 </script>
 </body>
 </html>
