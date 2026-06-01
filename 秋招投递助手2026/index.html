@@ -3,465 +3,174 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026秋招投递助手 · 多用户版</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<title>2026秋招投递助手</title>
 <style>
-:root {
-  --white: #ffffff; --warm-white: #f6f5f4; --warm-dark: #31302e;
-  --warm-gray-500: #615d59; --warm-gray-300: #a39e98; --near-black: rgba(0,0,0,0.95);
-  --blue: #0075de; --blue-active: #005bab; --blue-bg: #f2f9ff; --blue-text: #097fe8;
-  --green: #1aae39; --orange: #dd5b00; --pink: #ff64c8; --teal: #2a9d99; --red: #e03e3e;
-  --red-bg: #fff5f5; --border: 1px solid rgba(0,0,0,0.1);
-  --card-shadow: rgba(0,0,0,0.04) 0px 4px 18px, rgba(0,0,0,0.027) 0px 2.025px 7.84688px, rgba(0,0,0,0.02) 0px 0.8px 2.925px, rgba(0,0,0,0.01) 0px 0.175px 1.04062px;
-  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 9999px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--near-black); background: var(--white); line-height: 1.5; -webkit-font-smoothing: antialiased; }
-.hidden { display: none !important; }
-
-/* Auth */
-.auth-container { max-width: 420px; margin: 60px auto; padding: 0 24px; }
-.auth-card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--card-shadow); text-align: center; }
-.auth-card h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-.auth-card p { font-size: 15px; color: var(--warm-gray-500); margin-bottom: 24px; }
-.auth-tabs { display: flex; gap: 4px; margin-bottom: 24px; }
-.auth-tab { flex: 1; padding: 10px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); font-size: 15px; font-weight: 600; cursor: pointer; }
-.auth-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
-.auth-form { display: flex; flex-direction: column; gap: 12px; }
-.auth-form input { padding: 10px 14px; border: var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; }
-.auth-form input:focus { outline: 2px solid var(--blue); }
-.auth-form button { padding: 12px; background: var(--blue); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; }
-.auth-form button:hover { background: var(--blue-active); }
-.auth-error { color: var(--red); font-size: 14px; margin-top: 8px; }
-.auth-success { color: var(--green); font-size: 14px; margin-top: 8px; }
-
-/* Nav */
-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: var(--border); padding: 0 24px; }
-.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.nav-brand { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.nav-brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-.nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
-.nav-links a { font-size: 15px; font-weight: 500; color: var(--warm-gray-500); text-decoration: none; }
-.nav-user { font-size: 13px; color: var(--warm-gray-300); margin-right: 8px; }
-.nav-cta { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; }
-.nav-cta:active { transform: scale(0.95); }
-.nav-cta.outline { background: transparent; color: var(--warm-gray-500); border: var(--border); }
-.menu-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; }
-
-.section { padding: 64px 24px; } .section.warm { background: var(--warm-white); } .section-inner { max-width: 1200px; margin: 0 auto; }
-.hero { padding: 80px 24px 64px; text-align: center; }
-.hero-badge { display: inline-block; background: var(--blue-bg); color: var(--blue-text); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 24px; }
-.hero h1 { font-size: clamp(32px, 5vw, 64px); font-weight: 700; line-height: 1.04; margin-bottom: 16px; }
-.hero p { font-size: 20px; color: var(--warm-gray-500); max-width: 640px; margin: 0 auto 32px; }
-.hero-stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-.hero-stat { text-align: center; } .hero-stat .num { font-size: 40px; font-weight: 700; } .hero-stat .num.red { color: var(--red); } .hero-stat .label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
-.countdown-bar { display: inline-flex; align-items: center; gap: 8px; background: var(--red-bg); border: 1px solid rgba(224,62,62,0.2); border-radius: var(--radius-pill); padding: 8px 16px; margin-top: 24px; }
-.countdown-bar .text { font-size: 14px; font-weight: 600; color: var(--red); }
-
-.timeline-track { position: relative; padding: 32px 0; }
-.timeline-line { position: absolute; top: 56px; left: 0; right: 0; height: 2px; background: rgba(0,0,0,0.08); }
-.timeline-items { display: flex; justify-content: space-between; position: relative; z-index: 1; }
-.timeline-item { text-align: center; flex: 1; }
-.timeline-dot { width: 16px; height: 16px; border-radius: 50%; background: var(--white); border: 2px solid rgba(0,0,0,0.15); margin: 0 auto 12px; }
-.timeline-dot.active { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px rgba(0,117,222,0.15); }
-.timeline-dot.passed { background: var(--teal); border-color: var(--teal); }
-.timeline-month { font-size: 14px; font-weight: 600; color: var(--warm-gray-500); margin-bottom: 4px; }
-.timeline-label { font-size: 13px; color: var(--warm-gray-300); }
-
-.section-title { font-size: clamp(24px, 3vw, 40px); font-weight: 700; line-height: 1.15; margin-bottom: 8px; }
-.section-subtitle { font-size: 16px; color: var(--warm-gray-500); margin-bottom: 32px; }
-
-.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.stat-card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); text-align: center; }
-.stat-card .stat-num { font-size: 36px; font-weight: 700; } .stat-card .stat-label { font-size: 14px; color: var(--warm-gray-300); margin-top: 4px; }
-.stat-card.b .stat-num { color: var(--blue); } .stat-card.o .stat-num { color: var(--orange); } .stat-card.p .stat-num { color: var(--pink); } .stat-card.g .stat-num { color: var(--green); }
-.bar-chart { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); }
-.bar-chart h4 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
-.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.bar-label { width: 60px; font-size: 13px; font-weight: 600; text-align: right; color: var(--warm-gray-500); }
-.bar-track { flex: 1; height: 28px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s; display: flex; align-items: center; padding-left: 8px; font-size: 12px; font-weight: 600; color: white; }
-
-.search-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-.search-input { flex: 1; min-width: 200px; padding: 10px 16px; border: var(--border); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; background: var(--white); }
-.search-input:focus { outline: 2px solid var(--blue); }
-.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.filter-chip { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; white-space: nowrap; }
-.filter-chip.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
-
-.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-.card { background: var(--white); border: var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--card-shadow); position: relative; }
-.card.urgent { border-color: rgba(224,62,62,0.3); background: var(--red-bg); }
-.card .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
-.card h3 { font-size: 18px; font-weight: 700; }
-.card .industry-tag { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); background: #f0f0f0; color: var(--warm-gray-500); white-space: nowrap; }
-.card .deadline { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-.card .deadline.ok { color: var(--warm-gray-500); } .card .deadline.warn { color: var(--orange); } .card .deadline.urgent { color: var(--red); }
-.card .desc { font-size: 15px; color: var(--warm-gray-500); margin-bottom: 8px; }
-.card .referral { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 8px; }
-.card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.card .tags span { font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-pill); }
-.tag-blue { background: var(--blue-bg); color: var(--blue-text); } .tag-red { background: var(--red-bg); color: var(--red); }
-.card .link { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; }
-.card .source-tag { position: absolute; top: 12px; right: 12px; font-size: 10px; color: var(--warm-gray-300); }
-
-.tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-.view-toggle { display: flex; gap: 4px; }
-.view-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-sm); background: var(--white); color: var(--warm-gray-500); cursor: pointer; }
-.view-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
-.tracker-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-.filter-btn { font-size: 13px; font-weight: 600; padding: 6px 12px; border: var(--border); border-radius: var(--radius-pill); background: var(--white); color: var(--warm-gray-500); cursor: pointer; }
-.filter-btn.active { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
-.table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: var(--border); }
-table { width: 100%; border-collapse: collapse; min-width: 700px; background: var(--white); }
-th { text-align: left; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--warm-gray-300); border-bottom: var(--border); }
-td { padding: 12px 16px; font-size: 14px; border-bottom: var(--border); } tr:last-child td { border-bottom: none; }
-.status-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-pill); }
-.s-已投递 { background: var(--blue-bg); color: var(--blue-text); } .s-笔试中 { background: #fff6ed; color: #dd5b00; } .s-面试中 { background: #fff0f8; color: #ff64c8; } .s-Offer { background: #edf8f0; color: #1aae39; } .s-已拒 { background: #f5f0f0; color: #b33a3a; }
-
-.kanban-board { display: none; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-.kanban-col { background: var(--warm-white); border-radius: var(--radius-lg); padding: 12px; min-height: 150px; }
-.kanban-col h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--warm-gray-500); }
-.kanban-card { background: var(--white); border: var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 8px; box-shadow: var(--card-shadow); }
-.kanban-card .kc-company { font-size: 15px; font-weight: 700; } .kanban-card .kc-position { font-size: 13px; color: var(--warm-gray-500); margin: 2px 0; } .kanban-card .kc-date { font-size: 12px; color: var(--warm-gray-300); }
-
-.add-row-form { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-.add-row-form input, .add-row-form select { padding: 8px 12px; border: var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--white); }
-.add-row-form input:focus, .add-row-form select:focus { outline: 2px solid var(--blue); }
-.add-row-form button { background: var(--blue); color: white; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; }
-
-.resource-list { display: flex; flex-direction: column; gap: 12px; }
-.resource-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border: var(--border); border-radius: var(--radius-md); box-shadow: var(--card-shadow); gap: 16px; }
-.resource-item .r-info { flex: 1; } .resource-item .r-title { font-size: 16px; font-weight: 600; } .resource-item .r-desc { font-size: 14px; color: var(--warm-gray-500); margin-top: 2px; } .resource-item .r-link { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; white-space: nowrap; }
-
-footer { padding: 32px 24px; border-top: var(--border); text-align: center; font-size: 14px; color: var(--warm-gray-300); } footer a { color: var(--blue); }
-.no-results { text-align: center; padding: 48px; color: var(--warm-gray-300); display: none; }
-
-@media (max-width: 768px) {
-  .nav-links { display: none; } .menu-btn { display: block; }
-  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--white); border-bottom: var(--border); padding: 16px 24px; gap: 12px; }
-  .hero { padding: 56px 16px 40px; } .hero h1 { font-size: 32px; } .hero p { font-size: 16px; }
-  .hero-stats { gap: 24px; } .hero-stat .num { font-size: 28px; } .section { padding: 40px 16px; } .section-title { font-size: 24px; }
-  .card-grid { grid-template-columns: 1fr; } .dashboard-grid { grid-template-columns: 1fr 1fr; }
-  .search-bar { flex-direction: column; }
-  .timeline-track { padding: 0; } .timeline-line { top: 0; bottom: 0; left: 15px; right: auto; width: 2px; height: auto; }
-  .timeline-items { flex-direction: column; gap: 24px; padding-left: 40px; }
-  .timeline-item { text-align: left; display: flex; align-items: center; gap: 12px; } .timeline-dot { position: absolute; left: -32px; top: 4px; margin: 0; }
-  .kanban-board { grid-template-columns: 1fr; } .resource-item { flex-direction: column; align-items: flex-start; }
-}
-@media (max-width: 480px) { .hero-stats { flex-direction: column; gap: 16px; } .dashboard-grid { grid-template-columns: 1fr; } }
+:root{--bg:#f8f9fa;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--blue:#2563eb;--blue-bg:#eff6ff;--green:#16a34a;--red:#dc2626;--orange:#ea580c;--border:#e5e7eb;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+nav h1{font-size:20px;font-weight:700}
+nav .stats{display:flex;gap:16px;font-size:14px;color:var(--muted)}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.section-title{font-size:22px;font-weight:700;margin:24px 0 12px}
+/* Search & Filters */
+.search-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.search-bar input{flex:1;min-width:200px;padding:10px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:15px}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px;cursor:pointer;background:var(--card);transition:all .15s}
+.chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+/* Cards */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:box-shadow .15s}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.card.urgent{border-left:3px solid var(--red)}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.card-header h3{font-size:17px;font-weight:600}
+.industry-tag{font-size:12px;padding:2px 8px;border-radius:12px;background:var(--blue-bg);color:var(--blue);white-space:nowrap}
+.deadline{font-size:13px;margin-bottom:6px}
+.deadline.urgent{color:var(--red);font-weight:600}.deadline.warn{color:var(--orange)}.deadline.ok{color:var(--muted)}
+.desc{font-size:14px;color:var(--muted);margin-bottom:8px}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.tag-blue{padding:2px 8px;border-radius:4px;background:#dbeafe;color:#1e40af;font-size:12px}
+.tag-red{padding:2px 8px;border-radius:4px;background:#fee2e2;color:#991b1b;font-size:12px}
+.link{display:inline-block;padding:6px 14px;background:var(--blue);color:#fff;border-radius:6px;text-decoration:none;font-size:14px;font-weight:500;transition:background .15s}
+.link:hover{background:#1d4ed8}
+.no-results{text-align:center;padding:40px;color:var(--muted);display:none}
+/* Tracker */
+.tracker{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-top:24px}
+.tracker h3{margin-bottom:12px}
+.add-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.add-row input,.add-row select{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px}
+.add-row button{padding:8px 16px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;padding:8px 12px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted)}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.status-badge{padding:2px 8px;border-radius:4px;font-size:12px}
+.s-投递{background:#fef3c7;color:#92400e}.s-笔试{background:#dbeafe;color:#1e40af}.s-面试{background:#ede9fe;color:#6b21a8}.s-Offer{background:#d1fae5;color:#065f46}
+.btn-sm{padding:4px 10px;border:none;border-radius:4px;font-size:12px;cursor:pointer}
+.btn-del{background:none;color:var(--red)}.btn-export{background:var(--blue);color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;margin-top:12px}
+footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+@media(max-width:640px){.card-grid{grid-template-columns:1fr}.add-row{flex-direction:column}}
 </style>
 </head>
 <body>
 
-<!-- ═══ 登录/注册 ═══ -->
-<div id="authSection" class="auth-container">
-  <div class="auth-card">
-    <h1>秋招助手 2026</h1>
-    <p>登录后记录你的投递，数据云端同步</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
-      <button class="auth-tab" onclick="switchAuthTab('signup')">注册</button>
-    </div>
-    <div class="auth-form" id="authForm">
-      <input type="email" id="authEmail" placeholder="邮箱地址" autocomplete="email">
-      <input type="password" id="authPassword" placeholder="密码（至少6位）" autocomplete="current-password">
-      <button onclick="handleAuth()" id="authBtn">登录</button>
-      <div id="authMsg"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ 主应用 ═══ -->
-<div id="appSection" class="hidden">
 <nav>
-  <div class="nav-inner">
-    <div class="nav-brand"><span class="dot"></span>秋招助手 2026</div>
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
-    <ul class="nav-links" id="menu">
-      <li><a href="#dashboard">总览</a></li><li><a href="#timeline">时间线</a></li><li><a href="#companies">公司汇总</a></li><li><a href="#tracker">投递追踪</a></li><li><a href="#resources">资料区</a></li>
-      <li><span class="nav-user" id="navUser"></span><button class="nav-cta outline" onclick="signOut()" style="font-size:13px;padding:6px 10px;">退出</button></li>
-    </ul>
+  <h1>🎯 秋招助手 2026</h1>
+  <div class="stats">
+    <span>📋 <b id="company-total">0</b> 家公司</span>
+    <span>⏰ <b id="urgent-count" style="color:var(--red)">0</b> 即将截止</span>
+    <span>📝 已投 <b id="my-app-count">0</b></span>
   </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-badge">🔥 2026届秋招 · 提前批已陆续启动</div>
-  <h1>秋招投递，<br>一个页面全搞定</h1>
-  <p>6-8月提前批 → 9-10月正式批。海投不乱，追踪有据。</p>
-  <div class="hero-stats">
-    <div class="hero-stat"><div class="num" id="company-total">—</div><div class="label">收录公司</div></div>
-    <div class="hero-stat"><div class="num red" id="urgent-count">—</div><div class="label">即将截止</div></div>
-    <div class="hero-stat"><div class="num" id="my-applications">0</div><div class="label">我的投递</div></div>
-  </div>
-  <div class="countdown-bar" id="countdown-bar" style="display:none"><span>⏰</span><span class="text" id="countdown-text"></span></div>
-</section>
+<div class="container">
 
-<section class="section warm" id="dashboard">
-  <div class="section-inner">
-    <h2 class="section-title">📊 投递总览</h2>
-    <p class="section-subtitle">全局数据一目了然</p>
-    <div class="dashboard-grid">
-      <div class="stat-card b"><div class="stat-num" id="stat-total">0</div><div class="stat-label">总投递</div></div>
-      <div class="stat-card o"><div class="stat-num" id="stat-written">0</div><div class="stat-label">笔试中</div></div>
-      <div class="stat-card p"><div class="stat-num" id="stat-interview">0</div><div class="stat-label">面试中</div></div>
-      <div class="stat-card g"><div class="stat-num" id="stat-offer">0</div><div class="stat-label">已获Offer</div></div>
-    </div>
-    <div class="bar-chart">
-      <h4>📈 投递漏斗</h4>
-      <div class="bar-row"><span class="bar-label">已投递</span><div class="bar-track"><div class="bar-fill" id="bar-applied" style="width:0%;background:#0075de">0</div></div></div>
-      <div class="bar-row"><span class="bar-label">笔试中</span><div class="bar-track"><div class="bar-fill" id="bar-written" style="width:0%;background:#dd5b00">0</div></div></div>
-      <div class="bar-row"><span class="bar-label">面试中</span><div class="bar-track"><div class="bar-fill" id="bar-interview" style="width:0%;background:#ff64c8">0</div></div></div>
-      <div class="bar-row"><span class="bar-label">Offer</span><div class="bar-track"><div class="bar-fill" id="bar-offer" style="width:0%;background:#1aae39">0</div></div></div>
-    </div>
-  </div>
-</section>
+<div class="section-title">📊 公司列表</div>
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="搜索公司名或行业..." oninput="renderCompanies()">
+</div>
+<div class="filter-chips" id="filter-chips"></div>
+<div class="card-grid" id="company-cards"></div>
+<div class="no-results" id="no-results">没有匹配的公司 😅</div>
 
-<section class="section" id="timeline">
-  <div class="section-inner">
-    <h2 class="section-title">秋招时间线</h2>
-    <p class="section-subtitle">2026届校招关键节点</p>
-    <div class="timeline-track">
-      <div class="timeline-line"></div>
-      <div class="timeline-items">
-        <div class="timeline-item"><div class="timeline-dot passed"></div><div class="timeline-month">5月</div><div class="timeline-label">简历打磨</div></div>
-        <div class="timeline-item"><div class="timeline-dot active"></div><div class="timeline-month">6月</div><div class="timeline-label">提前批启动</div></div>
-        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-month">7月</div><div class="timeline-label">提前批高峰</div></div>
-        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-month">8月</div><div class="timeline-label">正式批启动</div></div>
-        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-month">9月</div><div class="timeline-label">正式批高峰</div></div>
-        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-month">10月</div><div class="timeline-label">补录签约</div></div>
-      </div>
-    </div>
+<div class="tracker" id="tracker-section">
+  <h3>📝 我的投递记录</h3>
+  <div class="add-row">
+    <input type="text" id="t-company" placeholder="公司名" style="width:130px">
+    <input type="text" id="t-position" placeholder="岗位" style="width:130px">
+    <input type="date" id="t-date">
+    <select id="t-status">
+      <option value="已投递">已投递</option><option value="笔试中">笔试中</option><option value="面试中">面试中</option><option value="Offer">Offer</option>
+    </select>
+    <input type="text" id="t-note" placeholder="备注" style="width:100px">
+    <button onclick="addApp()">+ 添加</button>
   </div>
-</section>
+  <table>
+    <thead><tr><th>公司</th><th>岗位</th><th>日期</th><th>状态</th><th>备注</th><th></th></tr></thead>
+    <tbody id="tracker-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">暂无记录，上方添加 ✨</td></tr></tbody>
+  </table>
+  <button class="btn-export" onclick="exportData()">📥 导出CSV</button>
+</div>
 
-<section class="section warm" id="companies">
-  <div class="section-inner">
-    <h2 class="section-title">公司网申入口</h2>
-    <p class="section-subtitle">搜索筛选，一键跳转，截止日期实时追踪</p>
-    <div class="search-bar">
-      <input type="text" class="search-input" id="search-input" placeholder="🔍 搜索公司名、行业…" oninput="renderCompanies()">
-      <div class="filter-chips" id="filter-chips"></div>
-    </div>
-    <div class="card-grid" id="company-cards"></div>
-    <div class="no-results" id="no-results"><div style="font-size:40px;margin-bottom:8px">🔍</div><div>没找到匹配的公司</div></div>
-  </div>
-</section>
+</div>
 
-<section class="section" id="tracker">
-  <div class="section-inner">
-    <h2 class="section-title">投递追踪</h2>
-    <p class="section-subtitle">记录每一步，数据云端同步，换设备不丢失</p>
-    <div class="tracker-header">
-      <div class="view-toggle">
-        <button class="view-btn active" onclick="switchView('table')">📋 表格</button>
-        <button class="view-btn" onclick="switchView('kanban')">📌 看板</button>
-      </div>
-      <div class="tracker-filters">
-        <button class="filter-btn active" onclick="filterTracker('all')">全部</button>
-        <button class="filter-btn" onclick="filterTracker('已投递')">已投递</button>
-        <button class="filter-btn" onclick="filterTracker('笔试中')">笔试中</button>
-        <button class="filter-btn" onclick="filterTracker('面试中')">面试中</button>
-        <button class="filter-btn" onclick="filterTracker('Offer')">Offer</button>
-      </div>
-      <button class="nav-cta" onclick="exportData()" style="font-size:13px;padding:6px 12px;">导出 CSV</button>
-    </div>
-    <div class="table-wrap" id="table-view"><table><thead><tr><th>公司</th><th>岗位</th><th>投递日期</th><th>状态</th><th>备注</th><th>操作</th></tr></thead><tbody id="tracker-body"></tbody></table></div>
-    <div class="kanban-board" id="kanban-view">
-      <div class="kanban-col"><h4>已投递 <span id="kc-已投递"></span></h4><div id="kan-已投递"></div></div>
-      <div class="kanban-col"><h4>笔试中 <span id="kc-笔试中"></span></h4><div id="kan-笔试中"></div></div>
-      <div class="kanban-col"><h4>面试中 <span id="kc-面试中"></span></h4><div id="kan-面试中"></div></div>
-      <div class="kanban-col"><h4>Offer <span id="kc-Offer"></span></h4><div id="kan-Offer"></div></div>
-    </div>
-    <div class="add-row-form">
-      <input type="text" id="input-company" placeholder="公司名" style="width:140px">
-      <input type="text" id="input-position" placeholder="岗位" style="width:160px">
-      <input type="date" id="input-date">
-      <select id="input-status"><option>已投递</option><option>笔试中</option><option>面试中</option><option>Offer</option><option>已拒</option></select>
-      <input type="text" id="input-note" placeholder="备注" style="width:120px">
-      <button onclick="addApp()">+ 添加</button>
-    </div>
-  </div>
-</section>
-
-<section class="section warm" id="resources">
-  <div class="section-inner">
-    <h2 class="section-title">面经 & 笔试资料</h2>
-    <p class="section-subtitle">刷题、面经、笔经，一站式收录</p>
-    <div class="resource-list">
-      <div class="resource-item"><div class="r-info"><div class="r-title">牛客网 · 校招题库</div><div class="r-desc">历年真题、面经、笔经</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">进入 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">LeetCode · 算法刷题</div><div class="r-desc">Hot 100 + 剑指Offer</div></div><a href="https://leetcode.cn/" target="_blank" class="r-link">进入 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">小红书 · 秋招经验</div><div class="r-desc">搜索"秋招面经"</div></div><a href="https://www.xiaohongshu.com/search_result?keyword=秋招面经" target="_blank" class="r-link">搜索 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">知乎 · 校招攻略</div><div class="r-desc">时间线、简历、面试避坑</div></div><a href="https://zhuanlan.zhihu.com/p/1954577401213330967" target="_blank" class="r-link">阅读 →</a></div>
-      <div class="resource-item"><div class="r-info"><div class="r-title">北森/赛码 · 在线测评</div><div class="r-desc">行测、性格测试练手感</div></div><a href="https://www.nowcoder.com/" target="_blank" class="r-link">练习 →</a></div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  秋招投递助手 2026 · 多用户版 · 数据云端同步<br>
-  <a href="https://campus2026.top" target="_blank">校招汇总参考</a> · 最后更新 2026-05-30
-</footer>
-</div><!-- #appSection -->
+<footer>数据更新于 2026-06-01 · 本地存储，数据仅保存在你的浏览器</footer>
 
 <script>
-// ═══ Supabase 配置（替换为你的项目信息） ═══
-var SUPABASE_URL = 'YOUR_SUPABASE_URL';
-var SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 // ═══ 公司数据 ═══
-var CAMPUS_DATA = [
-  {name:"字节跳动", industry:"互联网", tags:["研发+23%","5000+Offer"], url:"https://jobs.bytedance.com/campus", desc:"8月4日开启，研发岗需求暴增", deadline:"2026-09-15", source:"官网", referral:""},
-  {name:"阿里巴巴", industry:"互联网", tags:["7000+Offer","AI岗>60%"], url:"https://campus.alibaba.com", desc:"8月5日启动，15个业务集团齐招", deadline:"2026-09-20", source:"官网", referral:""},
-  {name:"腾讯", industry:"互联网", tags:["技术+产品"], url:"https://join.qq.com/", desc:"常规校招+阅文集团同步", deadline:"2026-09-25", source:"官网", referral:""},
-  {name:"京东", industry:"互联网+零售", tags:["3.5万岗位","零售/科技"], url:"https://campus.jd.com/", desc:"7月28日启动，岗位量大管饱", deadline:"2026-08-30", source:"官网", referral:""},
-  {name:"美团", industry:"互联网", tags:["6000人","技术>1/3"], url:"https://hr.meituan.com/web/campus", desc:"技术+运营双线招聘", deadline:"2026-09-15", source:"官网", referral:""},
-  {name:"百度", industry:"互联网", tags:["提前批7.20","AI优先"], url:"https://talent.baidu.com/", desc:"提前批7月20日开启", deadline:"2026-08-15", source:"官网", referral:""},
-  {name:"小红书", industry:"互联网", tags:["北上广深杭"], url:"https://job.xiaohongshu.com/campus", desc:"内容社区增长期", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"快手", industry:"互联网", tags:["北京为主"], url:"https://campus.kuaishou.cn/", desc:"短视频赛道持续扩招", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"小米", industry:"硬件+互联网", tags:["全国多地"], url:"https://hr.xiaomi.com/campus", desc:"手机+汽车+IoT全链", deadline:"2026-09-15", source:"官网", referral:""},
-  {name:"网易", industry:"互联网", tags:["游戏+音乐+教育"], url:"https://campus.163.com/", desc:"多业务线同步招聘", deadline:"2026-09-20", source:"官网", referral:""},
-  {name:"拼多多", industry:"电商", tags:["上海","增长快"], url:"https://careers.pinduoduo.com/", desc:"电商新贵，运营+供应链", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"蔚来", industry:"新能源", tags:["汽车+智能化"], url:"https://campus.nio.com/", desc:"新能源车企，岗位多元", deadline:"2026-10-15", source:"官网", referral:""},
-  {name:"Shopee", industry:"电商", tags:["深圳","东南亚"], url:"https://app.mokahr.com/campus_apply/shopee/2962/", desc:"跨境电商赛道", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"米哈游", industry:"游戏", tags:["上海/深圳"], url:"https://campus.mihoyo.com/", desc:"游戏行业顶流", deadline:"2026-09-15", source:"官网", referral:""},
-  {name:"哔哩哔哩", industry:"互联网", tags:["北上渝"], url:"https://jobs.bilibili.com/", desc:"Z世代社区", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"vivo", industry:"硬件", tags:["多地"], url:"https://hr.vivo.com/", desc:"手机+IoT", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"OPPO", industry:"硬件", tags:["10城"], url:"https://career.oppo.com/", desc:"手机+芯片+IoT", deadline:"2026-09-30", source:"官网", referral:""},
-  {name:"英特尔", industry:"半导体", tags:["京沪蓉"], url:"https://jobs.intel.com/", desc:"芯片巨头", deadline:"2026-10-31", source:"官网", referral:""},
-  {name:"宝洁", industry:"快消", tags:["管培生","8-9月"], url:"https://careers.pg.com.cn/", desc:"快消巨头，零售管理对口", deadline:"2026-09-20", source:"官网", referral:""},
-  {name:"联合利华", industry:"快消", tags:["管培生","9月"], url:"https://www.unilever.com.cn/careers/", desc:"快消管培，供应链+市场", deadline:"2026-10-15", source:"官网", referral:""},
-  {name:"欧莱雅", industry:"快消", tags:["管培生"], url:"https://careers.loreal.com/", desc:"美妆快消，品牌管理方向", deadline:"2026-10-15", source:"官网", referral:""},
-  {name:"可口可乐", industry:"快消", tags:["管培生","上海"], url:"https://www.coca-colacompany.com/careers", desc:"饮料巨头，上海总部", deadline:"2026-10-31", source:"官网", referral:""},
-  {name:"百胜中国", industry:"餐饮零售", tags:["管培生"], url:"https://careers.yumchina.com/", desc:"餐饮零售龙头，门店管理", deadline:"2026-10-31", source:"官网", referral:""},
-  {name:"沃尔玛", industry:"零售", tags:["管培生","山姆"], url:"https://careers.walmart.cn/", desc:"全球零售第一", deadline:"2026-10-31", source:"官网", referral:""},
-  {name:"华润万家", industry:"零售", tags:["国企","全国"], url:"https://crc.wintalent.cn/", desc:"央企零售，稳定有保障", deadline:"2026-10-31", source:"官网", referral:""},
-  {name:"知乎", industry:"互联网", tags:["北京"], url:"https://app.mokahr.com/campus_apply/zhihu/3818/", desc:"内容平台校招", deadline:"2026-09-30", source:"官网", referral:""}
-];
+var CAMPUS_DATA = JSON.parse(document.getElementById('data-holder').textContent);
 
-// ═══ Auth ═══
-var authMode = 'login';
-function switchAuthTab(mode) {
-  authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.toggle('active', t.textContent === (mode==='login'?'登录':'注册')); });
-  document.getElementById('authBtn').textContent = mode==='login'?'登录':'注册';
-  document.getElementById('authMsg').innerHTML = '';
-}
-function handleAuth() {
-  var email = document.getElementById('authEmail').value.trim();
-  var password = document.getElementById('authPassword').value;
-  if (!email || !password) { document.getElementById('authMsg').innerHTML = '<div class="auth-error">请填写邮箱和密码</div>'; return; }
-  if (password.length < 6) { document.getElementById('authMsg').innerHTML = '<div class="auth-error">密码至少6位</div>'; return; }
-  document.getElementById('authBtn').textContent = '处理中…';
-  document.getElementById('authBtn').disabled = true;
-  
-  var promise = authMode === 'login' ? sb.auth.signInWithPassword({email: email, password: password}) : sb.auth.signUp({email: email, password: password});
-  promise.then(function(r) {
-    if (r.error) {
-      var msg = r.error.message;
-      if (msg.includes('Invalid login')) msg = '邮箱或密码错误';
-      else if (msg.includes('already registered')) msg = '该邮箱已注册，请直接登录';
-      document.getElementById('authMsg').innerHTML = '<div class="auth-error">'+msg+'</div>';
-      document.getElementById('authBtn').textContent = authMode==='login'?'登录':'注册';
-      document.getElementById('authBtn').disabled = false;
-    } else if (authMode === 'signup' && r.data.user) {
-      document.getElementById('authMsg').innerHTML = '<div class="auth-success">注册成功，请查收验证邮件后登录</div>';
-      document.getElementById('authBtn').textContent = '注册';
-      document.getElementById('authBtn').disabled = false;
-    }
-  }).catch(function(e) {
-    document.getElementById('authMsg').innerHTML = '<div class="auth-error">网络错误，请重试</div>';
-    document.getElementById('authBtn').textContent = authMode==='login'?'登录':'注册';
-    document.getElementById('authBtn').disabled = false;
-  });
-}
-function signOut() { sb.auth.signOut(); }
+// ═══ 投递记录 (localStorage) ═══
+var apps = JSON.parse(localStorage.getItem('campus_apps') || '[]');
+var nextId = apps.length ? Math.max.apply(null, apps.map(function(a){return a.id})) + 1 : 1;
 
-// ═══ 工具函数 ═══
-var NOW = new Date(), DAY_MS = 86400000, URGENT = 7, WARN = 21;
-function dd(d) { if (!d) return null; return Math.ceil((new Date(d+'T00:00:00+08:00') - NOW) / DAY_MS); }
-function dc(d) { if (d === null) return 'ok'; if (d <= URGENT) return d < 0 ? 'urgent' : 'urgent'; if (d <= WARN) return 'warn'; return 'ok'; }
-function dl(d) { if (d === null) return ''; if (d < 0) return '已截止 ' + Math.abs(d) + ' 天'; if (d === 0) return '今天截止！'; if (d === 1) return '明天截止！'; if (d <= URGENT) return '⏰ ' + d + ' 天后截止'; if (d <= WARN) return '还有 ' + d + ' 天'; return d + ' 天后截止'; }
+function saveApps(){ localStorage.setItem('campus_apps', JSON.stringify(apps)); }
+
+function addApp(){
+  var c = document.getElementById('t-company').value.trim();
+  var p = document.getElementById('t-position').value.trim();
+  if(!c||!p) return alert('请填公司名和岗位');
+  apps.push({id:nextId++, company:c, position:p, date:document.getElementById('t-date').value||'未填写', status:document.getElementById('t-status').value, note:document.getElementById('t-note').value.trim()});
+  saveApps(); renderTracker(); ['t-company','t-position','t-note'].forEach(function(id){document.getElementById(id).value='';});
+}
+function deleteApp(id){ apps = apps.filter(function(a){return a.id!==id}); saveApps(); renderTracker(); }
+function renderTracker(){
+  var tb = document.getElementById('tracker-body');
+  tb.innerHTML = apps.length ? apps.map(function(a){
+    var sc = 's-' + a.status.replace(/中/g,'').replace(/已/g,'');
+    return '<tr><td><strong>'+a.company+'</strong></td><td>'+a.position+'</td><td>'+a.date+'</td><td><span class="status-badge '+sc+'">'+a.status+'</span></td><td style="font-size:13px;color:var(--muted)">'+(a.note||'-')+'</td><td><button class="btn-sm btn-del" onclick="deleteApp('+a.id+')">删除</button></td></tr>';
+  }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">暂无记录</td></tr>';
+  document.getElementById('my-app-count').textContent = apps.length;
+}
 
 // ═══ 公司渲染 ═══
-function renderCompanies() {
-  var grid = document.getElementById('company-cards'), s = document.getElementById('search-input').value.toLowerCase(), active = document.querySelector('.filter-chip.active'), filter = active ? active.dataset.filter : 'all', companies = CAMPUS_DATA;
-  if (filter !== 'all') companies = companies.filter(function(c) { return c.industry.indexOf(filter) >= 0; });
-  if (s) companies = companies.filter(function(c) { return c.name.toLowerCase().indexOf(s) >= 0 || c.industry.toLowerCase().indexOf(s) >= 0 || c.desc.toLowerCase().indexOf(s) >= 0; });
+var NOW = new Date(), DAY_MS = 86400000, URGENT = 7, WARN = 21;
+function dd(d){ if(!d) return null; return Math.ceil((new Date(d+'T00:00:00+08:00') - NOW) / DAY_MS); }
+function dc(d){ if(d===null) return 'ok'; if(d<=URGENT) return d<0?'urgent':'urgent'; if(d<=WARN) return 'warn'; return 'ok'; }
+function dl(d){ if(d===null) return ''; if(d<0) return '已截止 '+Math.abs(d)+' 天'; if(d===0) return '今天截止！'; if(d===1) return '明天截止！'; if(d<=URGENT) return '⏰ '+d+' 天后截止'; if(d<=WARN) return '还有 '+d+' 天'; return d+' 天后截止'; }
+
+function renderCompanies(){
+  var s = document.getElementById('search-input').value.toLowerCase();
+  var active = document.querySelector('.chip.active');
+  var filter = active ? active.dataset.filter : 'all';
+  var companies = CAMPUS_DATA;
+  if(filter !== 'all') companies = companies.filter(function(c){ return c.industry.indexOf(filter) >= 0; });
+  if(s) companies = companies.filter(function(c){ return c.name.toLowerCase().indexOf(s) >= 0 || c.industry.toLowerCase().indexOf(s) >= 0 || c.desc.toLowerCase().indexOf(s) >= 0; });
   document.getElementById('no-results').style.display = companies.length ? 'none' : 'block';
-  grid.innerHTML = companies.map(function(c) {
-    var d = dd(c.deadline), cls = dc(d), label = dl(d), urgent = (d !== null && d <= URGENT && d >= 0);
-    return '<div class="card' + (urgent ? ' urgent' : '') + '">' + (c.source ? '<span class="source-tag">' + c.source + '</span>' : '') + '<div class="card-header"><h3>' + c.name + '</h3><span class="industry-tag">' + c.industry + '</span></div>' + (c.deadline ? '<div class="deadline ' + cls + '">📅 ' + c.deadline + ' · ' + label + '</div>' : '') + '<div class="desc">' + c.desc + '</div>' + (c.referral ? '<div class="referral">🎫 内推码：' + c.referral + '</div>' : '') + '<div class="tags">' + c.tags.map(function(t) { return '<span class="' + (cls === 'urgent' ? 'tag-red' : 'tag-blue') + '">' + t + '</span>'; }).join('') + '</div><a href="' + c.url + '" target="_blank" class="link">投递入口 →</a></div>';
+  document.getElementById('company-cards').innerHTML = companies.map(function(c){
+    var d = dd(c.deadline), cls = dc(d), label = dl(d), urgent = (d!==null && d<=URGENT && d>=0);
+    return '<div class="card'+(urgent?' urgent':'')+'"><div class="card-header"><h3>'+c.name+'</h3><span class="industry-tag">'+c.industry+'</span></div>'+(c.deadline?'<div class="deadline '+cls+'">📅 '+c.deadline+' · '+label+'</div>':'')+'<div class="desc">'+c.desc+'</div>'+(c.referral?'<div style="font-size:13px;color:var(--green);margin-bottom:4px">🎫 内推码：'+c.referral+'</div>':'')+'<div class="tags">'+c.tags.map(function(t){return '<span class="'+(cls==='urgent'?'tag-red':'tag-blue')+'">'+t+'</span>';}).join('')+'</div><a href="'+c.url+'" target="_blank" class="link">投递入口 →</a></div>';
   }).join('');
 }
-function renderFilters() { var industries = []; CAMPUS_DATA.forEach(function(c) { if (industries.indexOf(c.industry) < 0) industries.push(c.industry); }); document.getElementById('filter-chips').innerHTML = '<span class="filter-chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>' + industries.map(function(i) { return '<span class="filter-chip" data-filter="' + i + '" onclick="setFilter(\'' + i + '\',this)">' + i + '</span>'; }).join(''); }
-function setFilter(f, el) { document.querySelectorAll('.filter-chip').forEach(function(c) { c.classList.remove('active'); }); el.classList.add('active'); renderCompanies(); }
-function updateCountdown() { document.getElementById('company-total').textContent = CAMPUS_DATA.length; var urgent = CAMPUS_DATA.filter(function(c) { var d = dd(c.deadline); return d !== null && d <= URGENT && d >= 0; }); document.getElementById('urgent-count').textContent = urgent.length; var up = CAMPUS_DATA.filter(function(c) { return c.deadline; }).map(function(c) { return { name: c.name, days: dd(c.deadline) }; }).filter(function(c) { return c.days >= 0; }).sort(function(a, b) { return a.days - b.days; }); if (up.length > 0) { document.getElementById('countdown-bar').style.display = 'inline-flex'; document.getElementById('countdown-text').textContent = '最近截止：' + up[0].name + ' — ' + dl(up[0].days); } }
 
-// ═══ Supabase CRUD ═══
-var apps = [], filter = 'all', view = 'table';
+function renderFilters(){
+  var industries = [];
+  CAMPUS_DATA.forEach(function(c){ if(industries.indexOf(c.industry) < 0) industries.push(c.industry); });
+  document.getElementById('filter-chips').innerHTML = '<span class="chip active" data-filter="all" onclick="setFilter(\'all\',this)">全部</span>' + industries.map(function(i){ return '<span class="chip" data-filter="'+i+'" onclick="setFilter(\''+i+'\',this)">'+i+'</span>'; }).join('');
+}
+function setFilter(f, el){ document.querySelectorAll('.chip').forEach(function(c){c.classList.remove('active');}); el.classList.add('active'); renderCompanies(); }
 
-function loadApps() {
-  return sb.from('applications').select('*').order('created_at', { ascending: false }).then(function(r) {
-    apps = r.data || [];
-    renderTable(filter);
-    updateDashboard();
-  });
-}
-function addApp() {
-  var c = document.getElementById('input-company').value.trim(), p = document.getElementById('input-position').value.trim(), d = document.getElementById('input-date').value, s = document.getElementById('input-status').value, n = document.getElementById('input-note').value.trim();
-  if (!c || !p) return alert('请填写公司名和岗位');
-  sb.from('applications').insert([{ company: c, position: p, date: d || '未填写', status: s, note: n }]).then(function() {
-    loadApps();
-    ['input-company', 'input-position', 'input-note'].forEach(function(id) { document.getElementById(id).value = ''; });
-  });
-}
-function deleteApp(id) {
-  sb.from('applications').delete().eq('id', id).then(function() { loadApps(); });
-}
-function renderTable(f) { filter = f;
-  var tbody = document.getElementById('tracker-body'), filtered = f === 'all' ? apps : apps.filter(function(a) { return a.status === f; });
-  tbody.innerHTML = filtered.length ? filtered.map(function(a) { var sc = 's-' + a.status.replace(/中/, '').replace(/已/, ''); return '<tr><td><strong>' + a.company + '</strong></td><td>' + a.position + '</td><td>' + a.date + '</td><td><span class="status-badge ' + sc + '">' + a.status + '</span></td><td style="color:var(--warm-gray-300);font-size:13px;">' + (a.note || '-') + '</td><td><button onclick="deleteApp(' + a.id + ')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:13px;">删除</button></td></tr>'; }).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--warm-gray-300);padding:32px;">暂无记录，下方添加 ✨</td></tr>';
-  renderKanban();
-}
-function renderKanban() { var filtered = filter === 'all' ? apps : apps.filter(function(a) { return a.status === filter; }); ['已投递', '笔试中', '面试中', 'Offer'].forEach(function(st) { var a = filtered.filter(function(x) { return x.status === st; }); document.getElementById('kc-' + st).textContent = '(' + a.length + ')'; document.getElementById('kan-' + st).innerHTML = a.length ? a.map(function(x) { return '<div class="kanban-card"><div class="kc-company">' + x.company + '</div><div class="kc-position">' + x.position + '</div><div class="kc-date">' + x.date + '</div>' + (x.note ? '<div style="font-size:12px;color:var(--warm-gray-500);margin-top:4px;">' + x.note + '</div>' : '') + '<button onclick="deleteApp(' + x.id + ')" style="border:none;background:none;color:#b33a3a;cursor:pointer;font-size:11px;margin-top:4px;">删除</button></div>'; }).join('') : '<div style="padding:24px;text-align:center;color:var(--warm-gray-300);font-size:13px;">暂无</div>'; }); }
-function switchView(v) { view = v; document.querySelectorAll('.view-btn').forEach(function(b) { b.classList.remove('active'); }); event.target.classList.add('active'); document.getElementById('table-view').style.display = v === 'table' ? 'block' : 'none'; document.getElementById('kanban-view').style.display = v === 'kanban' ? 'grid' : 'none'; if (v === 'kanban') renderKanban(); }
-function filterTracker(s) { document.querySelectorAll('.tracker-filters .filter-btn').forEach(function(b) { b.classList.remove('active'); }); event.target.classList.add('active'); renderTable(s); }
-function exportData() { var csv = '\uFEFF公司,岗位,投递日期,状态,备注\n' + apps.map(function(a) { return a.company + ',' + a.position + ',' + a.date + ',' + a.status + ',' + a.note; }).join('\n'); var b = new Blob([csv], { type: 'text/csv;charset=utf-8' }); var u = URL.createObjectURL(b); var a = document.createElement('a'); a.href = u; a.download = '秋招投递记录.csv'; a.click(); }
-function toggleMenu() { document.getElementById('menu').classList.toggle('open'); }
-function updateDashboard() {
-  var t = apps.length, w = apps.filter(function(a) { return a.status === '笔试中'; }).length, i = apps.filter(function(a) { return a.status === '面试中'; }).length, o = apps.filter(function(a) { return a.status === 'Offer'; }).length, ap = t - w - i - o;
-  document.getElementById('stat-total').textContent = t; document.getElementById('stat-written').textContent = w; document.getElementById('stat-interview').textContent = i; document.getElementById('stat-offer').textContent = o;
-  document.getElementById('my-applications').textContent = t;
-  var max = Math.max(ap, w, i, o, 1), pw = function(v) { return Math.round(v / max * 100) + '%'; };
-  document.getElementById('bar-applied').style.width = pw(ap); document.getElementById('bar-applied').textContent = ap;
-  document.getElementById('bar-written').style.width = pw(w); document.getElementById('bar-written').textContent = w;
-  document.getElementById('bar-interview').style.width = pw(i); document.getElementById('bar-interview').textContent = i;
-  document.getElementById('bar-offer').style.width = pw(o); document.getElementById('bar-offer').textContent = o;
+function updateCountdown(){
+  document.getElementById('company-total').textContent = CAMPUS_DATA.length;
+  var urgent = CAMPUS_DATA.filter(function(c){ var d = dd(c.deadline); return d!==null && d<=URGENT && d>=0; });
+  document.getElementById('urgent-count').textContent = urgent.length;
 }
 
-// ═══ Init ═══
-sb.auth.onAuthStateChange(function(event, session) {
-  if (session) {
-    document.getElementById('authSection').classList.add('hidden');
-    document.getElementById('appSection').classList.remove('hidden');
-    document.getElementById('navUser').textContent = session.user.email;
-    renderFilters(); renderCompanies(); updateCountdown(); loadApps();
-  } else {
-    document.getElementById('authSection').classList.remove('hidden');
-    document.getElementById('appSection').classList.add('hidden');
-  }
-});
+function exportData(){
+  var csv = '\uFEFF公司,岗位,投递日期,状态,备注\n' + apps.map(function(a){ return a.company+','+a.position+','+a.date+','+a.status+','+a.note; }).join('\n');
+  var b = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var u = URL.createObjectURL(b);
+  var a = document.createElement('a'); a.href = u; a.download = '秋招投递记录.csv'; a.click();
+}
 
-// 启动时检查已存在session
-sb.auth.getSession().then(function(r) {
-  if (!r.data.session) {
-    document.getElementById('authSection').classList.remove('hidden');
-  }
-});
+// Init
+renderFilters(); renderCompanies(); updateCountdown(); renderTracker();
 </script>
+
+<script id="data-holder" type="application/json">
+[{"name":"字节跳动","industry":"互联网","tags":["研发+23%","5000+Offer"],"url":"https://jobs.bytedance.com/campus","desc":"8月4日开启，研发岗需求暴增","deadline":"2026-09-15","source":"官网","referral":""},{"name":"阿里巴巴","industry":"互联网","tags":["7000+Offer","AI岗>60%"],"url":"https://campus.alibaba.com","desc":"8月5日启动，15个业务集团齐招","deadline":"2026-09-20","source":"官网","referral":""},{"name":"腾讯","industry":"互联网","tags":["技术+产品"],"url":"https://join.qq.com/","desc":"常规校招+阅文集团同步","deadline":"2026-09-25","source":"官网","referral":""},{"name":"京东","industry":"互联网+零售","tags":["3.5万岗位","零售/科技"],"url":"https://campus.jd.com/","desc":"7月28日启动，岗位量大管饱","deadline":"2026-08-30","source":"官网","referral":""},{"name":"美团","industry":"互联网","tags":["6000人","技术>1/3"],"url":"https://hr.meituan.com/web/campus","desc":"技术+运营+食杂零售管培生","deadline":"2026-09-15","source":"官网","referral":""},{"name":"百度","industry":"互联网","tags":["提前批7.20","AI优先"],"url":"https://talent.baidu.com/","desc":"提前批7.20开启，网申至6月底","deadline":"2026-06-30","source":"官网","referral":""},{"name":"小红书","industry":"互联网","tags":["北上广深杭"],"url":"https://job.xiaohongshu.com/campus","desc":"内容社区增长期","deadline":"2026-09-30","source":"官网","referral":""},{"name":"快手","industry":"互联网","tags":["北京为主"],"url":"https://campus.kuaishou.cn/","desc":"短视频赛道持续扩招","deadline":"2026-09-30","source":"官网","referral":""},{"name":"小米","industry":"硬件+互联网","tags":["全国多地"],"url":"https://hr.xiaomi.com/campus","desc":"手机+汽车+IoT全链","deadline":"2026-09-15","source":"官网","referral":""},{"name":"网易","industry":"互联网","tags":["游戏+音乐+教育"],"url":"https://campus.163.com/","desc":"多业务线同步招聘","deadline":"2026-09-20","source":"官网","referral":""},{"name":"拼多多","industry":"电商","tags":["上海","增长快"],"url":"https://careers.pinduoduo.com/","desc":"电商新贵，运营+供应链","deadline":"2026-09-30","source":"官网","referral":""},{"name":"蔚来","industry":"新能源","tags":["汽车+智能化"],"url":"https://campus.nio.com/","desc":"新能源车企，岗位多元","deadline":"2026-10-15","source":"官网","referral":""},{"name":"Shopee","industry":"电商","tags":["深圳","东南亚"],"url":"https://app.mokahr.com/campus_apply/shopee/2962/","desc":"跨境电商赛道","deadline":"2026-09-30","source":"官网","referral":""},{"name":"米哈游","industry":"游戏","tags":["上海/深圳"],"url":"https://campus.mihoyo.com/","desc":"游戏行业顶流","deadline":"2026-09-15","source":"官网","referral":""},{"name":"哔哩哔哩","industry":"互联网","tags":["北上渝"],"url":"https://jobs.bilibili.com/","desc":"Z世代社区","deadline":"2026-09-30","source":"官网","referral":""},{"name":"vivo","industry":"硬件","tags":["多地"],"url":"https://hr.vivo.com/","desc":"手机+IoT","deadline":"2026-09-30","source":"官网","referral":""},{"name":"OPPO","industry":"硬件","tags":["10城"],"url":"https://career.oppo.com/","desc":"手机+芯片+IoT","deadline":"2026-09-30","source":"官网","referral":""},{"name":"英特尔","industry":"半导体","tags":["京沪蓉"],"url":"https://jobs.intel.com/","desc":"芯片巨头","deadline":"2026-10-31","source":"官网","referral":""},{"name":"华为","industry":"硬件+通信","tags":["全球"],"url":"https://career.huawei.com/","desc":"通信+终端+云+车BU","deadline":"2026-09-30","source":"官网","referral":""},{"name":"比亚迪","industry":"新能源","tags":["汽车+电池"],"url":"https://job.byd.com/portal/mobile/school-home","desc":"全球新能源龙头","deadline":"2026-10-31","source":"官网","referral":""},{"name":"SHEIN","industry":"电商+零售","tags":["广州/南京","快时尚"],"url":"https://careers.shein.cn/Students-&-Graduates","desc":"跨境电商独角兽","deadline":"2026-10-31","source":"官网","referral":""},{"name":"顺丰","industry":"物流","tags":["全国","管培生"],"url":"https://campus.sf-express.com/","desc":"物流巨头校招","deadline":"2026-10-31","source":"官网","referral":""},{"name":"雀巢","industry":"快消","tags":["全国","管培生"],"url":"https://www.nestlecareers.cn/campus","desc":"食品快消龙头","deadline":"2026-10-31","source":"官网","referral":""},{"name":"理想汽车","industry":"新能源","tags":["北京/常州"],"url":"https://www.lixiang.com/employ/campus.html","desc":"造车新势力","deadline":"2026-10-15","source":"官网","referral":""},{"name":"名创优品","industry":"零售","tags":["广州","全球化"],"url":"https://miniso.zhiye.com/campus","desc":"全球零售品牌","deadline":"2026-10-31","source":"官网","referral":""},{"name":"盒马","industry":"零售+互联网","tags":["上海/杭州","新零售"],"url":"https://hire.freshippo.com/campus/home?lang=zh","desc":"阿里系新零售","deadline":"2026-10-31","source":"官网","referral":""},{"name":"携程","industry":"互联网+旅游","tags":["上海"],"url":"https://campus.ctrip.com/","desc":"OTA龙头","deadline":"2026-10-31","source":"官网","referral":""},{"name":"荣耀","industry":"硬件","tags":["全国","营销管培生"],"url":"https://www.honor.com/cn/career","desc":"手机品牌校招","deadline":"2026-10-31","source":"官网","referral":""},{"name":"滴滴","industry":"互联网","tags":["北京/杭州"],"url":"https://campus.didiglobal.com/","desc":"出行平台","deadline":"2026-10-31","source":"官网","referral":""},{"name":"大疆","industry":"硬件","tags":["深圳","机器人"],"url":"https://we.dji.com/zh-CN/campus","desc":"无人机+影像","deadline":"2026-09-15","source":"官网","referral":""}]
+</script>
+
 </body>
 </html>
